@@ -20,10 +20,10 @@ const mongoURI = process.env.MONGODB_URI || "mongodb://127.0.0.1:27017/myLocalDB
 //  .then(() => console.log("Connected to MongoDB"))
 //  .catch((err) => console.log(err));
 
-connect
-    .connect(mongoURI, { useNewUrlParser: true, useUnifiedTopology: true })
-    .then(() => console.log("✅ MongoDB Connected Successfully"))
-    .catch((err) => console.error("❌ MongoDB Connection Error:", err));
+connect(mongoURI, { useNewUrlParser: true, useUnifiedTopology: true })
+  .then(() => console.log("✅ MongoDB Connected Successfully"))
+  .catch((err) => console.error("❌ MongoDB Connection Error:", err));
+
 
 // Schema for rental details
 const rentalSchema = new Schema({
