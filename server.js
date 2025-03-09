@@ -6,7 +6,7 @@ const { json } = pkg;
 
 const app = express();
 const port = 5001;
-const mongoose = require("mongoose");
+//const mongoose = require("mongoose");
 
 // Middleware
 app.use(cors());
@@ -20,7 +20,7 @@ const mongoURI = process.env.MONGODB_URI || "mongodb://127.0.0.1:27017/myLocalDB
 //  .then(() => console.log("Connected to MongoDB"))
 //  .catch((err) => console.log(err));
 
-mongoose
+connect
     .connect(mongoURI, { useNewUrlParser: true, useUnifiedTopology: true })
     .then(() => console.log("✅ MongoDB Connected Successfully"))
     .catch((err) => console.error("❌ MongoDB Connection Error:", err));
