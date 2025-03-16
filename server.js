@@ -13,7 +13,8 @@ app.use(cors());
 app.use(json());
 
 // Use Heroku Config Var or fallback to local MongoDB
-const mongoURI = process.env.MONGODB_URI || "mongodb://127.0.0.1:27017/myLocalDB";
+//const mongoURI = "mongodb://127.0.0.1:27017/rentalApp";
+const mongoURI = "mongodb+srv://venky79:Spring2025@kevankrentals.bnqb5.mongodb.net/test?retryWrites=true&w=majority&appName=kevankrentals";
 
 // MongoDB connection
 //connect("mongodb://localhost:27017/rentalApp", { useNewUrlParser: true, useUnifiedTopology: true })
