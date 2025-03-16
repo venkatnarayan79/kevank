@@ -1,7 +1,7 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import RentalRequestFlow from "./RentalRequestFlow";
-import CreateListing from "./CreateListing";
-import ThankYou from "./ThankYou";
+import RentalRequestFlow from "./RentalRequestFlow.js";
+import CreateListing from "./CreateListing.js";
+import ThankYou from "./ThankYou.js";
 
 export default function App() {
   return (
