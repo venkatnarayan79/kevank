@@ -7,7 +7,7 @@ import { useTheme } from "next-themes"
 import { Button } from "@/components/ui/button"
 
 export function ModeToggle() {
-  const { setTheme, resolvedTheme} = useTheme()
+  const { setTheme, resolvedTheme } = useTheme()
 
   const toggleTheme = React.useCallback(() => {
     setTheme(resolvedTheme === "dark" ? "light" : "dark")
@@ -17,7 +17,7 @@ export function ModeToggle() {
     <Button
       variant="secondary"
       size="icon"
-      className="group/toggle size-8"
+      className="group/toggle size-8 cursor-pointer"
       onClick={toggleTheme}
     >
       <IconBrightness />
