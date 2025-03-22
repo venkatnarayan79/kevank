@@ -5,7 +5,6 @@ import Link from "next/link";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { ModeToggle } from "@/components/mode-toggle";
 import { Menu as MenuIcon, X } from "lucide-react";
-import { cn } from "@/lib/utils";
 
 export function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -35,7 +34,7 @@ export function Navbar() {
             <Link
               href="/create-listing"
               onClick={() => setIsMenuOpen(false)}
-              className={cn(buttonVariants({ variant: "default" }))}
+              className={buttonVariants({ variant: "default" })}
             >
               Create a Listing
             </Link>
@@ -84,7 +83,7 @@ export function Navbar() {
             <Link
               href="/create-listing"
               onClick={() => setIsMenuOpen(false)}
-              className={cn(buttonVariants({ variant: "default" }))}
+              className={buttonVariants({ variant: "default" })}
             >
               Create a Listing
             </Link>

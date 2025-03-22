@@ -4,12 +4,14 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
-import { Loader2, CheckCircle } from "lucide-react";
+import { Loader2, CheckCircle, Home } from "lucide-react";
+import Link from "next/link";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
+import { SearchData } from "@/app/request-details/page";
 
 // ----- Schema Definition -----
 const requestDetailsSchema = z.object({
@@ -21,7 +23,7 @@ const requestDetailsSchema = z.object({
 type RequestDetailsData = z.infer<typeof requestDetailsSchema>;
 
 interface RequestDetailsFormProps {
-  searchData: any;
+  searchData: SearchData;
 }
 
 // ----- Confirmation Message Component -----
@@ -32,10 +34,13 @@ const ConfirmationMessage: React.FC = () => (
     </div>
     <h2 className="text-2xl font-bold mb-2">Request Submitted!</h2>
     <p className="text-muted-foreground mb-6">
-      Thank you for your interest. It looks like this item is no longer available. We'll send you information about available rentals matching your criteria shortly.
+      Thank you for your interest. It looks like this item is no longer available. We&apos;ll send you information about available rentals matching your criteria shortly.
     </p>
-    <Button asChild>
-      <a href="/">Return to Home</a>
+    <Button asChild className="gap-2">
+      <Link href="/">
+        <Home className="h-4 w-4" />
+        Back to Home
+      </Link>
     </Button>
   </div>
 );

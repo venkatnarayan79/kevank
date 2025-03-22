@@ -1,27 +1,37 @@
-"use client"
+"use client";
 
-import { useSearchParams, useRouter } from "next/navigation"
-import { useState, useEffect } from "react"
-import { RequestDetailsForm } from "@/components/request-details-form"
+import { useSearchParams, useRouter } from "next/navigation";
+import { useState, useEffect } from "react";
+import { RequestDetailsForm } from "@/components/request-details-form";
+
+// Define a type for the search data extracted from URL params.
+export interface SearchData {
+  searchQuery: string;
+  zipCode: string;
+  startDate: string;
+  startTime: string;
+  endDate: string;
+  endTime: string;
+}
 
 export default function RequestDetailsPage() {
-  const searchParams = useSearchParams()
-  const router = useRouter()
-  const [searchData, setSearchData] = useState<any>(null)
+  const searchParams = useSearchParams();
+  const router = useRouter();
+  const [searchData, setSearchData] = useState<SearchData | null>(null);
 
   useEffect(() => {
     // Get search data from URL params
-    const searchQuery = searchParams.get("searchQuery")
-    const zipCode = searchParams.get("zipCode")
-    const startDate = searchParams.get("startDate")
-    const startTime = searchParams.get("startTime")
-    const endDate = searchParams.get("endDate")
-    const endTime = searchParams.get("endTime")
+    const searchQuery = searchParams.get("searchQuery");
+    const zipCode = searchParams.get("zipCode");
+    const startDate = searchParams.get("startDate");
+    const startTime = searchParams.get("startTime");
+    const endDate = searchParams.get("endDate");
+    const endTime = searchParams.get("endTime");
 
-    // If no search data, redirect back to home
+    // If any search data is missing, redirect back to home
     if (!searchQuery || !zipCode || !startDate || !startTime || !endDate || !endTime) {
-      router.push("/")
-      return
+      router.push("/");
+      return;
     }
 
     setSearchData({
@@ -31,15 +41,15 @@ export default function RequestDetailsPage() {
       startTime,
       endDate,
       endTime,
-    })
-  }, [searchParams, router])
+    });
+  }, [searchParams, router]);
 
   if (!searchData) {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary"></div>
       </div>
-    )
+    );
   }
 
   return (
@@ -74,6 +84,5 @@ export default function RequestDetailsPage() {
         <RequestDetailsForm searchData={searchData} />
       </div>
     </main>
-  )
+  );
 }
-
