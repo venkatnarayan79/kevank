@@ -1,11 +1,12 @@
+import { Footer } from "@/components/footer";
 import { Hero } from "@/components/hero";
 import { Navbar } from "@/components/navbar";
 import { SearchForm } from "@/components/search-form";
 
 export default function Home() {
+
   return (
     <main className="min-h-screen">
-      <Navbar />
       <Hero />
       <div className="container mx-auto px-4 py-12">
         <div className="max-w-4xl mx-auto">
