@@ -7,7 +7,7 @@ import { Navbar } from "@/components/navbar";
 import { Footer } from "@/components/footer";
 
 export const metadata: Metadata = {
-  title: "Kevank",
+  title: "Kavenk",
   description: "Rental Request App",
 };
 

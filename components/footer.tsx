@@ -9,7 +9,7 @@ export function Footer() {
           {/* Brand and Description */}
           <div className="space-y-4">
             <Link href="/" className="text-2xl font-bold">
-              Kevank
+              Kavenk
             </Link>
             <p className="text-muted-foreground">
               Find your perfect rental property with our easy-to-use platform. Browse thousands of listings.
@@ -87,10 +87,10 @@ export function Footer() {
               <li className="flex items-center">
                 <Mail className="mr-2 h-5 w-5 text-muted-foreground" />
                 <Link
-                  href="mailto:info@kevank.com"
+                  href="mailto:info@kavenk.com"
                   className="text-muted-foreground hover:text-primary transition-colors"
                 >
-                  info@kevank.com
+                  info@kavenk.com
                 </Link>
               </li>
             </ul>
@@ -101,7 +101,7 @@ export function Footer() {
         <div className="border-t mt-12 pt-8">
           <div className="flex flex-col md:flex-row justify-between items-center">
             <p className="text-muted-foreground text-sm">
-              &copy; {new Date().getFullYear()} Kevank. All rights reserved.
+              &copy; {new Date().getFullYear()} Kavenk. All rights reserved.
             </p>
             <div className="flex space-x-6 mt-4 md:mt-0">
               <Link href="/privacy" className="text-sm text-muted-foreground hover:text-primary transition-colors">

@@ -20,7 +20,7 @@ const CAROUSEL_HEIGHT = "500px" // Height for the carousel
 const backgroundImages = [
   "bike-ride-6804105_1280.jpg",
   "equipment-4521859_1920.jpg",
-  "kevank_homepage.jpg",
+  "kavenk_homepage.jpg",
   "lawn-care-643559_1280.jpg",
   "man-498473_1920.jpg",
   "tent-548022_1920.jpg",
