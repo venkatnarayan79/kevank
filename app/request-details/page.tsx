@@ -8,10 +8,8 @@ import { RequestDetailsForm } from "@/components/request-details-form";
 export interface SearchData {
   searchQuery: string;
   zipCode: string;
-  startDate: string;
-  startTime: string;
-  endDate: string;
-  endTime: string;
+  startDateTime: Date;
+  endDateTime: Date;
 }
 
 export default function RequestDetailsPage() {
@@ -23,13 +21,11 @@ export default function RequestDetailsPage() {
     // Get search data from URL params
     const searchQuery = searchParams.get("searchQuery");
     const zipCode = searchParams.get("zipCode");
-    const startDate = searchParams.get("startDate");
-    const startTime = searchParams.get("startTime");
-    const endDate = searchParams.get("endDate");
-    const endTime = searchParams.get("endTime");
+    const startDateTime = searchParams.get("startDateTime");
+    const endDateTime = searchParams.get("endDateTime");
 
     // If any search data is missing, redirect back to home
-    if (!searchQuery || !zipCode || !startDate || !startTime || !endDate || !endTime) {
+    if (!searchQuery || !zipCode || !startDateTime || !endDateTime) {
       router.push("/");
       return;
     }
@@ -37,12 +33,12 @@ export default function RequestDetailsPage() {
     setSearchData({
       searchQuery,
       zipCode,
-      startDate,
-      startTime,
-      endDate,
-      endTime,
+      startDateTime: new Date(startDateTime),
+      endDateTime: new Date(endDateTime),
     });
   }, [searchParams, router]);
+
+  console.log(searchData);
 
   if (!searchData) {
     return (
@@ -73,10 +69,20 @@ export default function RequestDetailsPage() {
               <span className="font-medium">Location:</span> {searchData.zipCode}
             </li>
             <li>
-              <span className="font-medium">From:</span> {searchData.startDate} at {searchData.startTime}
+              <span className="font-medium">From:</span>{" "}
+              {searchData.startDateTime.toLocaleDateString()} at{" "}
+              {searchData.startDateTime.toLocaleTimeString([], {
+                hour: "2-digit",
+                minute: "2-digit",
+              })}
             </li>
             <li>
-              <span className="font-medium">To:</span> {searchData.endDate} at {searchData.endTime}
+              <span className="font-medium">To:</span>{" "}
+              {searchData.endDateTime.toLocaleDateString()} at{" "}
+              {searchData.endDateTime.toLocaleTimeString([], {
+                hour: "2-digit",
+                minute: "2-digit",
+              })}
             </li>
           </ul>
         </div>

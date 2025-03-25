@@ -170,21 +170,50 @@ export function SearchForm() {
   const startDate = watch("startDate");
 
   const onSubmit = async (data: SearchFormData) => {
+    // Helper to parse a 12-hour time string (e.g., "9:00 AM") into hour and minute values
+    function parseTime(timeStr: string) {
+      const [time, modifier] = timeStr.split(" ");
+      const [rawHours, rawMinutes] = time.split(":").map(Number);
+      let hours = rawHours;
+      const minutes = rawMinutes;
+      if (modifier === "PM" && hours !== 12) {
+        hours += 12;
+      }
+      if (modifier === "AM" && hours === 12) {
+        hours = 0;
+      }
+      return { hours, minutes };
+    }
+    
+
+    // Clone the date objects so we don't mutate the originals
+    const startDateTime = new Date(data.startDate);
+    const endDateTime = new Date(data.endDate);
+
+    // Extract hours and minutes from the time strings
+    const { hours: startHours, minutes: startMinutes } = parseTime(data.startTime);
+    const { hours: endHours, minutes: endMinutes } = parseTime(data.endTime);
+
+    // Set the time values on the date objects (seconds and milliseconds are set to 0)
+    startDateTime.setHours(startHours, startMinutes, 0, 0);
+    endDateTime.setHours(endHours, endMinutes, 0, 0);
+
+    // Now startDateTime and endDateTime are Date objects combining the separate date and time fields.
     const formattedData = {
       searchQuery: data.searchQuery,
       zipCode: data.zipCode,
-      startDate: format(data.startDate, "yyyy-MM-dd"),
-      startTime: data.startTime,
-      endDate: format(data.endDate, "yyyy-MM-dd"),
-      endTime: data.endTime,
+      startDateTime, // Date object
+      endDateTime,   // Date object
     };
 
     console.log("Search form submitted with data:", formattedData);
 
+    // If needed for routing or query parameters, you might convert the Date objects to strings.
     const params = new URLSearchParams();
-    Object.entries(formattedData).forEach(([key, value]) => {
-      params.append(key, value);
-    });
+    params.append("searchQuery", data.searchQuery);
+    params.append("zipCode", data.zipCode);
+    params.append("startDateTime", startDateTime.toISOString());
+    params.append("endDateTime", endDateTime.toISOString());
 
     router.push(`/request-details?${params.toString()}`);
   };

@@ -62,12 +62,28 @@ export function RequestDetailsForm({ searchData }: RequestDetailsFormProps) {
     },
   });
 
-  const onSubmit = async (data: RequestDetailsData) => {
-    const fullData = { ...searchData, ...data };
+  const onSubmit = async (requestDetailsData: RequestDetailsData) => {
+    // Merge the combined fields with other search data and form data
+    const fullData = {
+      ...searchData,
+      ...requestDetailsData,
+    };
+
     console.log("Full request data:", fullData);
 
     try {
-      await new Promise((resolve) => setTimeout(resolve, 1500));
+      const response = await fetch("/api/rentals", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(fullData),
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to save data");
+      }
+
       setIsSubmitted(true);
     } catch (error) {
       console.error("Error submitting form:", error);
