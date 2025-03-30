@@ -149,13 +149,13 @@ export function RequestDetailsForm({ searchData }: RequestDetailsFormProps) {
           </Button>
           <p className="text-xs text-muted-foreground text-center mt-4">
             By submitting this form, you agree to our{" "}
-            <a href="/terms" className="underline underline-offset-2">
+            <Link href="/terms" className="underline underline-offset-2">
               Terms of Service
-            </a>{" "}
+            </Link>{" "}
             and{" "}
-            <a href="/privacy" className="underline underline-offset-2">
+            <Link href="/privacy" className="underline underline-offset-2">
               Privacy Policy
-            </a>
+            </Link>
             .
           </p>
         </div>
