@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
-import { PrismaClient, type Listings } from "@prisma/client";
+import { PrismaClient, type Listing } from "@prisma/client";
 
 const prisma = new PrismaClient();
 
@@ -8,12 +8,12 @@ export async function POST(req: NextRequest) {
   console.log("Received request to save listings data");
 
   try {
-    const data: Listings = await req.json();
+    const data: Listing = await req.json();
 
     console.log("Listings data:", data);
 
     // Save the data to MongoDB using Prisma
-    const listing = await prisma.listings.create({
+    const listing = await prisma.listing.create({
       data,
     });
 
