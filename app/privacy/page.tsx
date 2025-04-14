@@ -2,7 +2,7 @@
 export default function PrivacyPolicyPage() {
   const effectiveDate = "April 14, 2025"
   const contactEmail = "contact@kavenk.com"
-  const businessAddress = "123 Rental Street, Suite 101, New York, NY 10001"
+  // const businessAddress = "123 Rental Street, Suite 101, New York, NY 10001"
 
   return (
       <main className="container mx-auto px-4 py-12">
@@ -86,7 +86,7 @@ export default function PrivacyPolicyPage() {
                 Our website may contain links to third-party sites. We are not responsible for their privacy practices.
               </p>
 
-              <h2 className="text-xl font-bold mt-8 mb-4">7. Children's Privacy</h2>
+              <h2 className="text-xl font-bold mt-8 mb-4">{`7. Children's Privacy`}</h2>
               <p>Kavenk.com is not intended for children under 13, and we do not knowingly collect data from them.</p>
 
               <h2 className="text-xl font-bold mt-8 mb-4">8. Changes to This Policy</h2>
@@ -100,9 +100,6 @@ export default function PrivacyPolicyPage() {
               <ul className="list-disc pl-6 space-y-2">
                 <li>
                   <strong>Email:</strong> {contactEmail}
-                </li>
-                <li>
-                  <strong>Address:</strong> {businessAddress}
                 </li>
               </ul>
 

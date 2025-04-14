@@ -30,7 +30,7 @@ export async function sendContactEmail(data: ContactFormData) {
     // Send email using Resend
     const { data: emailData, error } = await resend.emails.send({
       from: "Contact Form <onboarding@resend.dev>", // Use your verified domain in production
-      to: "ayushkoul00@gmail.com", // Company email address
+      to: "contact@kavenk.com", // Company email address
       replyTo: data.email,
       subject: `Contact Form: ${data.subject}`,
       html: `

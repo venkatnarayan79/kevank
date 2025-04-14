@@ -98,7 +98,7 @@ export function Hero() {
       <div className="absolute inset-0 flex items-center justify-center z-40 pointer-events-auto">
         <div className="container px-4 text-center">
           <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-6">
-            Rent what you need, share what you don't.
+            {`Rent what you need, share what you don't.`}
           </h1>
           <p className="text-xl text-white mb-8 max-w-2xl mx-auto">
             Access thousands of tools, appliances, and equipment in your neighborhood. Save money, reduce waste, and connect with your community.
