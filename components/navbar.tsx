@@ -1,17 +1,17 @@
-"use client";
+"use client"
 
-import { useState } from "react";
-import Link from "next/link";
-import { Button, buttonVariants } from "@/components/ui/button";
-import { ModeToggle } from "@/components/mode-toggle";
-import { Menu as MenuIcon, X } from "lucide-react";
+import { useState } from "react"
+import Link from "next/link"
+import { Button, buttonVariants } from "@/components/ui/button"
+import { ModeToggle } from "@/components/mode-toggle"
+import { MenuIcon, X } from "lucide-react"
 
 export function Navbar() {
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isMenuOpen, setIsMenuOpen] = useState(false)
 
   const toggleMenu = () => {
-    setIsMenuOpen(!isMenuOpen);
-  };
+    setIsMenuOpen(!isMenuOpen)
+  }
 
   return (
     <header className="border-b bg-background relative z-50">
@@ -27,6 +27,9 @@ export function Navbar() {
           <nav className="hidden md:flex items-center gap-6">
             <Link href="/" className="text-sm font-medium hover:underline underline-offset-4">
               Home
+            </Link>
+            <Link href="/how-it-works" className="text-sm font-medium hover:underline underline-offset-4">
+              How It Works
             </Link>
             <Link href="/contact" className="text-sm font-medium hover:underline underline-offset-4">
               Contact Us
@@ -50,11 +53,7 @@ export function Navbar() {
               onClick={toggleMenu}
               aria-expanded={isMenuOpen}
             >
-              {isMenuOpen ? (
-                <X className="h-6 w-6" />
-              ) : (
-                <MenuIcon className="h-6 w-6" />
-              )}
+              {isMenuOpen ? <X className="h-6 w-6" /> : <MenuIcon className="h-6 w-6" />}
               <span className="sr-only">Toggle menu</span>
             </Button>
             <ModeToggle />
@@ -74,6 +73,13 @@ export function Navbar() {
               Home
             </Link>
             <Link
+              href="/how-it-works"
+              className="text-sm font-medium px-4 py-2 hover:bg-muted rounded-md"
+              onClick={() => setIsMenuOpen(false)}
+            >
+              How It Works
+            </Link>
+            <Link
               href="/contact"
               className="text-sm font-medium px-4 py-2 hover:bg-muted rounded-md"
               onClick={() => setIsMenuOpen(false)}
@@ -91,5 +97,5 @@ export function Navbar() {
         </div>
       )}
     </header>
-  );
+  )
 }

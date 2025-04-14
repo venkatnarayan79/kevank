@@ -15,19 +15,19 @@ export function Footer() {
               Find your perfect rental property with our easy-to-use platform. Browse thousands of listings.
             </p>
             <div className="flex space-x-4">
-              <Link href="#" className="text-muted-foreground hover:text-primary transition-colors">
+              <Link href="/" className="text-muted-foreground hover:text-primary transition-colors">
                 <Facebook size={20} />
                 <span className="sr-only">Facebook</span>
               </Link>
-              <Link href="#" className="text-muted-foreground hover:text-primary transition-colors">
+              <Link href="/" className="text-muted-foreground hover:text-primary transition-colors">
                 <Twitter size={20} />
                 <span className="sr-only">Twitter</span>
               </Link>
-              <Link href="#" className="text-muted-foreground hover:text-primary transition-colors">
+              <Link href="/" className="text-muted-foreground hover:text-primary transition-colors">
                 <Instagram size={20} />
                 <span className="sr-only">Instagram</span>
               </Link>
-              <Link href="#" className="text-muted-foreground hover:text-primary transition-colors">
+              <Link href="/" className="text-muted-foreground hover:text-primary transition-colors">
                 <Linkedin size={20} />
                 <span className="sr-only">LinkedIn</span>
               </Link>
@@ -43,24 +43,19 @@ export function Footer() {
                   Home
                 </Link>
               </li>
-              <li>
-                <Link href="/listings" className="text-muted-foreground hover:text-primary transition-colors">
+              {/* <li>
+                <Link href="/" className="text-muted-foreground hover:text-primary transition-colors">
                   Browse Listings
                 </Link>
-              </li>
+              </li> */}
               <li>
                 <Link href="/create-listing" className="text-muted-foreground hover:text-primary transition-colors">
-                  List Your Property
+                  Create a Listing
                 </Link>
               </li>
               <li>
                 <Link href="/about" className="text-muted-foreground hover:text-primary transition-colors">
                   About Us
-                </Link>
-              </li>
-              <li>
-                <Link href="/blog" className="text-muted-foreground hover:text-primary transition-colors">
-                  Blog
                 </Link>
               </li>
             </ul>
@@ -70,7 +65,7 @@ export function Footer() {
           <div>
             <h3 className="font-semibold text-lg mb-4">Contact Us</h3>
             <ul className="space-y-3">
-              <li className="flex items-start">
+              {/* <li className="flex items-start">
                 <MapPin className="mr-2 h-5 w-5 text-muted-foreground shrink-0 mt-0.5" />
                 <span className="text-muted-foreground">
                   123 Rental Street, Suite 101
@@ -83,14 +78,14 @@ export function Footer() {
                 <Link href="tel:+1234567890" className="text-muted-foreground hover:text-primary transition-colors">
                   (123) 456-7890
                 </Link>
-              </li>
+              </li> */}
               <li className="flex items-center">
                 <Mail className="mr-2 h-5 w-5 text-muted-foreground" />
                 <Link
-                  href="mailto:info@kavenk.com"
+                  href="mailto:contact@kavenk.com"
                   className="text-muted-foreground hover:text-primary transition-colors"
                 >
-                  info@kavenk.com
+                  contact@kavenk.com
                 </Link>
               </li>
             </ul>
@@ -110,9 +105,9 @@ export function Footer() {
               <Link href="/terms" className="text-sm text-muted-foreground hover:text-primary transition-colors">
                 Terms of Service
               </Link>
-              <Link href="/sitemap" className="text-sm text-muted-foreground hover:text-primary transition-colors">
+              {/* <Link href="/sitemap" className="text-sm text-muted-foreground hover:text-primary transition-colors">
                 Sitemap
-              </Link>
+              </Link> */}
             </div>
           </div>
         </div>

@@ -98,10 +98,10 @@ export function Hero() {
       <div className="absolute inset-0 flex items-center justify-center z-40 pointer-events-auto">
         <div className="container px-4 text-center">
           <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-6">
-            Your dream rental marketplace
+            Rent what you need, share what you don't.
           </h1>
           <p className="text-xl text-white mb-8 max-w-2xl mx-auto">
-            Build community. Skip Store. Save Planet.
+            Access thousands of tools, appliances, and equipment in your neighborhood. Save money, reduce waste, and connect with your community.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link href="#search-form" className={cn(buttonVariants({ variant: "default", size: "lg" }), "min-w-[150px]")}>
@@ -109,7 +109,7 @@ export function Hero() {
             </Link>
             <Link href="/create-listing" className={cn(buttonVariants({ variant: "outline", size: "lg" }),
               "min-w-[150px] bg-white/10 text-white border-white hover:bg-white/20")}>
-              List Your Property
+              List your item
             </Link>
           </div>
         </div>
