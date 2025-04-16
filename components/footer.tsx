@@ -13,7 +13,7 @@ export function Footer() {
               Kavenk
             </Link>
             <p className="text-muted-foreground">
-              Find your perfect rental property with our easy-to-use platform. Browse thousands of listings.
+              {"Find what you need with our easy to use platform . Search from millions of items."}
             </p>
             {/* <div className="flex space-x-4">
               <Link href="/" className="text-muted-foreground hover:text-primary transition-colors">
