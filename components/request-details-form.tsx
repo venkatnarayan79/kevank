@@ -11,7 +11,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { SearchData } from "@/app/request-details/page";
+import { SearchData } from "@/app/(pages)/request-details/page";
 
 // ----- Schema Definition -----
 const requestDetailsSchema = z.object({

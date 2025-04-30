@@ -71,7 +71,7 @@ export function Hero() {
                 aria-hidden="true"
               />
               {/* Gradient overlay */}
-              <div className="absolute inset-0 bg-gradient-to-r from-blue-500 to-purple-600 opacity-70 dark:opacity-80" />
+              <div className="absolute inset-0 bg-gradient-to-r from-[#50D5B7] to-[#067D68] opacity-30 dark:opacity-80" />
             </CarouselItem>
           ))}
         </CarouselContent>
