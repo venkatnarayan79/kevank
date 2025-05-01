@@ -11,6 +11,8 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
+import { RecommendedCarousel } from "@/components/ui/RecommendedCarousel";
+
 
 // Define schema for the form
 const createListingSchema = z.object({
@@ -33,6 +35,21 @@ const createListingSchema = z.object({
     .refine((val) => /^\d{5}(-\d{4})?$/.test(val), {
       message: "Please enter a valid zip code (5 digits or 5+4 format)",
     }),
+  
+    // Added start date
+    startDate: z.date({
+      required_error: "Start date is required",
+    }),
+
+    // Added end date
+    endDate: z.date({
+      required_error: "End date is required",
+    }),
+
+    // Added below validation
+}).refine((data) => data.endDate >= data.startDate, {
+  message: "End date must be after start date",
+  path: ["endDate"],
 });
 
 type CreateListingData = z.infer<typeof createListingSchema>;
@@ -74,6 +91,8 @@ export default function CreateListingPage() {
       productDescription: "",
       rentalPrice: 0,
       zipCode: "",
+      startDate: undefined,
+      endDate: undefined,
     },
   });
 
@@ -112,6 +131,8 @@ export default function CreateListingPage() {
             List your item for rent on our platform. Fill out the form below with details about your rental.
           </p>
         </div>
+
+        <RecommendedCarousel />
 
         <div className="bg-background rounded-lg shadow-lg p-6">
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
@@ -210,6 +231,32 @@ export default function CreateListingPage() {
                         className={errors.zipCode ? "border-red-500" : ""}
                       />
                       {errors.zipCode && <p className="text-red-500 text-xs mt-1">{errors.zipCode.message}</p>}
+                    </div>
+
+                    <div>
+                      <Label htmlFor="startDate" className="mb-1 block">
+                        Start Date <span className="text-red-500">*</span>
+                      </Label>
+                      <Input
+                        id="startDate"
+                        type="date"
+                        {...register("startDate", { valueAsDate: true })}
+                        className={errors.startDate ? "border-red-500" : ""}
+                      />
+                      {errors.startDate && <p className="text-red-500 text-xs mt-1">{errors.startDate.message}</p>}
+                    </div>
+
+                    <div>
+                      <Label htmlFor="endDate" className="mb-1 block">
+                        End Date <span className="text-red-500">*</span>
+                      </Label>
+                      <Input
+                        id="endDate"
+                        type="date"
+                        {...register("endDate", { valueAsDate: true })}
+                        className={errors.endDate ? "border-red-500" : ""}
+                      />
+                      {errors.endDate && <p className="text-red-500 text-xs mt-1">{errors.endDate.message}</p>}
                     </div>
                   </div>
                 </div>

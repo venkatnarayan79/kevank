@@ -22,6 +22,8 @@ model Rental {
   name          String
   email         String
   comments      String?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
 }
 
 model Listing {
@@ -32,6 +34,8 @@ model Listing {
   productDescription String
   rentalPrice        Float
   zipCode            String
+  startDate          DateTime
+  endDate            DateTime
   createdAt          DateTime @default(now())
   updatedAt          DateTime @updatedAt
 }
