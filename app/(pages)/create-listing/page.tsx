@@ -132,7 +132,10 @@ export default function CreateListingPage() {
           </p>
         </div>
 
-        <RecommendedCarousel />
+        <RecommendedCarousel
+        mainHeading="Recommended Listings"
+        subHeading="Discover popular items to list"
+      />
 
         <div className="bg-background rounded-lg shadow-lg p-6">
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">

@@ -11,18 +11,23 @@ import {
   CarouselNext,
 } from "./carousel";
 
+type RecommendedCarouselProps = {
+  mainHeading?: string;
+  subHeading?: string;
+};
+
 const items = [
   {
     src: "/bike-ride-6804105_1280.jpg",
-    title: "Bicycle",
+    title: "Bike",
   },
   {
     src: "/equipment-4521859_1920.jpg",
-    title: "Tools",
+    title: "Equipment",
   },
   {
     src: "/kavenk_homepage.jpg",
-    title: "Camping Gear",
+    title: "Home Essential",
   },
   {
     src: "/lawn-care-643559_1280.jpg",
@@ -30,27 +35,30 @@ const items = [
   },
   {
     src: "/man-498473_1920.jpg",
-    title: "Ski Gear",
+    title: "Man Gear",
   },
   {
     src: "/tent-548022_1920.jpg",
-    title: "Camping Gear",
-  },
-  {
-    src: "/vacuum-cleaner-657719_1280.jpg",
-    title: "Carpet Cleaner",
-  },
-  {
-    src: "/woman-6572974_1280.jpg",
-    title: "Electric Bike",
+    title: "Camping Tent",
   },
   {
     src: "/vacuum-cleaner-657719_1280.jpg",
     title: "Vacuum Cleaner",
   },
+  {
+    src: "/woman-6572974_1280.jpg",
+    title: "Woman Gear",
+  },
+  {
+    src: "/vacuum-cleaner-657719_1280.jpg",
+    title: "Vacuum Cleaner Deluxe",
+  },
 ];
 
-export function RecommendedCarousel() {
+export function RecommendedCarousel({
+  mainHeading = "Recommended Rentals",
+  subHeading = "Discover popular items to rent",
+}: RecommendedCarouselProps) {
   const [isHovered, setIsHovered] = React.useState(false);
 
   return (
@@ -60,10 +68,10 @@ export function RecommendedCarousel() {
       onMouseLeave={() => setIsHovered(false)}
     >
       <h1 className="text-4xl font-extrabold mb-4 text-center text-foreground">
-        Recommended Rentals
+        {mainHeading}
       </h1>
       <h2 className="text-xl font-semibold mb-8 text-center text-muted-foreground">
-        Discover popular items to rent
+        {subHeading}
       </h2>
       <Carousel
         opts={{
