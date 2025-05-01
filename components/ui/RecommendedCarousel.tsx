@@ -11,16 +11,43 @@ import {
   CarouselNext,
 } from "./carousel";
 
-const images = [
-  "/bike-ride-6804105_1280.jpg",
-  "/equipment-4521859_1920.jpg",
-  "/kavenk_homepage.jpg",
-  "/lawn-care-643559_1280.jpg",
-  "/man-498473_1920.jpg",
-  "/tent-548022_1920.jpg",
-  "/vacuum-cleaner-657719_1280.jpg",
-  "/woman-6572974_1280.jpg",
-  "/vacuum-cleaner-657719_1280.jpg", // added one more image (duplicate)
+const items = [
+  {
+    src: "/bike-ride-6804105_1280.jpg",
+    title: "Bike",
+  },
+  {
+    src: "/equipment-4521859_1920.jpg",
+    title: "Equipment",
+  },
+  {
+    src: "/kavenk_homepage.jpg",
+    title: "Home Essential",
+  },
+  {
+    src: "/lawn-care-643559_1280.jpg",
+    title: "Lawn Care",
+  },
+  {
+    src: "/man-498473_1920.jpg",
+    title: "Man Gear",
+  },
+  {
+    src: "/tent-548022_1920.jpg",
+    title: "Camping Tent",
+  },
+  {
+    src: "/vacuum-cleaner-657719_1280.jpg",
+    title: "Vacuum Cleaner",
+  },
+  {
+    src: "/woman-6572974_1280.jpg",
+    title: "Woman Gear",
+  },
+  {
+    src: "/vacuum-cleaner-657719_1280.jpg",
+    title: "Vacuum Cleaner Deluxe",
+  },
 ];
 
 export function RecommendedCarousel() {
@@ -51,21 +78,19 @@ export function RecommendedCarousel() {
         className="relative"
       >
         <CarouselContent className="-ml-6">
-          {images.map((src, index) => (
+          {items.map((item, index) => (
             <CarouselItem key={index} className="pl-6 basis-1/4">
               <div className="group relative rounded-lg overflow-hidden border border-border shadow-sm transition-shadow hover:shadow-md">
                 <div className="relative w-full aspect-[4/3]">
                   <Image
-                    src={src}
-                    alt={`Recommended item ${index + 1}`}
+                    src={item.src}
+                    alt={item.title}
                     fill
                     className="object-cover transition-transform duration-300 ease-in-out group-hover:scale-105"
-                    priority={index < 4} // prioritize first 4 images
+                    priority={index < 4}
                   />
                   <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/60 to-transparent p-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-b-lg">
-                    <p className="text-white text-base font-semibold">
-                      Recommended Item {index + 1}
-                    </p>
+                    <p className="text-white text-base font-semibold">{item.title}</p>
                   </div>
                 </div>
               </div>
