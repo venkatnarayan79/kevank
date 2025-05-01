@@ -14,15 +14,15 @@ import {
 const items = [
   {
     src: "/bike-ride-6804105_1280.jpg",
-    title: "Bike",
+    title: "Bicycle",
   },
   {
     src: "/equipment-4521859_1920.jpg",
-    title: "Equipment",
+    title: "Tools",
   },
   {
     src: "/kavenk_homepage.jpg",
-    title: "Home Essential",
+    title: "Camping Gear",
   },
   {
     src: "/lawn-care-643559_1280.jpg",
@@ -30,23 +30,23 @@ const items = [
   },
   {
     src: "/man-498473_1920.jpg",
-    title: "Man Gear",
+    title: "Ski Gear",
   },
   {
     src: "/tent-548022_1920.jpg",
-    title: "Camping Tent",
+    title: "Camping Gear",
+  },
+  {
+    src: "/vacuum-cleaner-657719_1280.jpg",
+    title: "Carpet Cleaner",
+  },
+  {
+    src: "/woman-6572974_1280.jpg",
+    title: "Electric Bike",
   },
   {
     src: "/vacuum-cleaner-657719_1280.jpg",
     title: "Vacuum Cleaner",
-  },
-  {
-    src: "/woman-6572974_1280.jpg",
-    title: "Woman Gear",
-  },
-  {
-    src: "/vacuum-cleaner-657719_1280.jpg",
-    title: "Vacuum Cleaner Deluxe",
   },
 ];
 
