@@ -100,7 +100,7 @@ export function Hero() {
       <div className="absolute inset-0 flex items-center justify-center z-10 pointer-events-auto">
         <div className="container px-4 grid grid-cols-1 md:grid-cols-2 gap-8 max-w-7xl">
           {/* Left side: Heading and paragraph */}
-          <div className="text-white max-w-lg self-center">
+          <div className="text-gray-900 dark:text-white max-w-lg self-center">
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 leading-tight">
               Rent what you need, share what you don't.
             </h1>
@@ -110,7 +110,7 @@ export function Hero() {
           </div>
 
           {/* Right side: Search card */}
-          <div className="bg-[#1C2A1F] rounded-lg p-8 max-w-md mx-auto text-white">
+          <div className="bg-white dark:bg-[#1C2A1F] rounded-lg p-8 max-w-md mx-auto text-gray-900 dark:text-white">
             <h3 className="text-center text-xl font-semibold mb-6">
               FIND YOUR PERFECT RENTAL
             </h3>
