@@ -5,28 +5,17 @@ import Link from "next/link"
 import type { EmblaCarouselType } from "embla-carousel"
 import Autoplay from "embla-carousel-autoplay"
 
-import { buttonVariants } from "@/components/ui/button"
+import { buttonVariants } from "./ui/button"
 import {
   Carousel,
   CarouselContent,
   CarouselItem,
-} from "@/components/ui/carousel"
+} from "./ui/carousel"
 import { cn } from "@/lib/utils"
+import { SearchForm } from "@/components/search-form";
 
 // Configuration constants
 const AUTO_PLAY_DELAY = 3000 // Autoplay delay in milliseconds
-const CAROUSEL_HEIGHT = "500px" // Height for the carousel
-
-const backgroundImages = [
-  "bike-ride-6804105_1280.jpg",
-  "equipment-4521859_1920.jpg",
-  "kavenk_homepage.jpg",
-  "lawn-care-643559_1280.jpg",
-  "man-498473_1920.jpg",
-  "tent-548022_1920.jpg",
-  "vacuum-cleaner-657719_1280.jpg",
-  "woman-6572974_1280.jpg",
-]
 
 export function Hero() {
   const [api, setApi] = useState<EmblaCarouselType | undefined>(undefined)
@@ -52,6 +41,17 @@ export function Hero() {
     }
   }, [api])
 
+  const backgroundImages = [
+    "bike-ride-6804105_1280.jpg",
+    "equipment-4521859_1920.jpg",
+    "kavenk_homepage.jpg",
+    "lawn-care-643559_1280.jpg",
+    "man-498473_1920.jpg",
+    "tent-548022_1920.jpg",
+    "vacuum-cleaner-657719_1280.jpg",
+    "woman-6572974_1280.jpg",
+  ]
+
   return (
     <div className="relative overflow-hidden">
       {/* Carousel with rotating background images */}
@@ -61,7 +61,10 @@ export function Hero() {
         opts={{ loop: true }}
         className="w-full"
       >
-        <CarouselContent style={{ height: CAROUSEL_HEIGHT }}>
+        <CarouselContent
+          style={{ height: "560px" }}
+          className="md:h-[560px] sm:h-[420px]"
+        >
           {backgroundImages.map((image, index) => (
             <CarouselItem key={index} className="relative">
               {/* Background image */}
@@ -84,8 +87,7 @@ export function Hero() {
               <button
                 key={index}
                 onClick={() => api?.scrollTo(index)}
-                className={`w-2 h-2 rounded-full transition-all ${isCurrent ? "bg-white w-4" : "bg-white/50 hover:bg-white/80"
-                  }`}
+                className={`w-2 h-2 rounded-full transition-all ${isCurrent ? "bg-white w-4" : "bg-white/50 hover:bg-white/80"}`}
                 aria-label={`Go to slide ${index + 1}`}
                 aria-current={isCurrent ? "true" : "false"}
               />
@@ -95,22 +97,24 @@ export function Hero() {
       </Carousel>
 
       {/* Fixed text overlay */}
-      <div className="absolute inset-0 flex items-center justify-center z-40 pointer-events-auto">
-        <div className="container px-4 text-center">
-          <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-6">
-            {`Rent what you need, share what you don't.`}
-          </h1>
-          <p className="text-xl text-white mb-8 max-w-2xl mx-auto">
-            Access thousands of tools, appliances, and equipment in your neighborhood. Save money, reduce waste, and connect with your community.
-          </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Link href="#search-form" className={cn(buttonVariants({ variant: "default", size: "lg" }), "min-w-[150px]")}>
-              Search Now
-            </Link>
-            <Link href="/create-listing" className={cn(buttonVariants({ variant: "outline", size: "lg" }),
-              "min-w-[150px] bg-white/10 text-white border-white hover:bg-white/20")}>
-              List your item
-            </Link>
+      <div className="absolute inset-0 flex items-center justify-center z-10 pointer-events-auto">
+        <div className="container px-4 grid grid-cols-1 md:grid-cols-2 gap-8 max-w-7xl">
+          {/* Left side: Heading and paragraph */}
+          <div className="text-white max-w-lg self-center">
+            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 leading-tight">
+              Rent what you need, share what you don't.
+            </h1>
+            <p className="text-xl max-w-md">
+              Access thousands of tools, appliances, and equipment in your neighborhood. Save money, reduce waste, and connect with your community.
+            </p>
+          </div>
+
+          {/* Right side: Search card */}
+          <div className="bg-[#1C2A1F] rounded-lg p-8 max-w-md mx-auto text-white">
+            <h3 className="text-center text-xl font-semibold mb-6">
+              FIND YOUR PERFECT RENTAL
+            </h3>
+            <SearchForm />
           </div>
         </div>
       </div>
