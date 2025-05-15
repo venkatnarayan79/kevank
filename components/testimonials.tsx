@@ -72,7 +72,7 @@ const Testimonials: React.FC = () => {
           </h2>
           <div className="mt-1 h-1 w-16 bg-red-500" />
           <p className="mt-6 text-gray-600 max-w-xs dark:text-gray-300">
-            Here's what they have to say about their RentoMojo experience.
+            Here's what they have to say about their Kevank experience.
           </p>
 
           {/* arrows */}
