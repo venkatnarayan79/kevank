@@ -7,38 +7,38 @@ import { UserRound } from "lucide-react";
 
 interface Testimonial {
   name: string;
-  avatar?: string;       // optional now
+  avatar?: string; // optional now
   message: string;
 }
 
 const testimonials: Testimonial[] = [
   {
     name: "Julian Wan",
-    avatar: "/julian-wan-2EdIX-O2lkI-unsplash.jpg",   // 6e3b4681-…jpg
+    avatar: "/julian-wan-2EdIX-O2lkI-unsplash.jpg",
     message:
       "Renting here felt effortless. The process is quick, the pricing is fair, and I never have to worry about storing bulky gear in my apartment.",
   },
   {
     name: "Alex Suprun",
-    avatar: "/alex-suprun-mynsNaNwVDc-unsplash.jpg",     // 32afa630-…jpg
+    avatar: "/alex-suprun-mynsNaNwVDc-unsplash.jpg",
     message:
       "This platform lets me try pro-grade equipment without dropping a fortune. The owners I’ve met are friendly and the gear is always in top shape.",
   },
   {
     name: "Andrew Power",
-    avatar: "/andrew-power-9ZXpKFlQkjo-unsplash.jpg",      // a8f2632a-…jpg
+    avatar: "/andrew-power-9ZXpKFlQkjo-unsplash.jpg",
     message:
       "I listed my DSLR kit last month and it’s already paying for itself. The dashboard makes managing bookings a breeze.",
   },
   {
     name: "Kevin Park",
-    avatar: "/kevin-park.jpg",        // 7432387a-…jpg
+    avatar: "/kevin-park.jpg",
     message:
       "Booking was seamless. Pick-up and return took minutes, and customer support followed up to make sure everything went smoothly.",
   },
   {
     name: "Fatane Rahimi",
-    avatar: "/fatane-rahimi-GNpmCi26fpI-unsplash.jpg",     // e2a150af-…jpg
+    avatar: "/fatane-rahimi-GNpmCi26fpI-unsplash.jpg",
     message:
       "Love the community vibe! Renting out my guitar each weekend helps cover my own subscription costs on the site.",
   },
@@ -46,8 +46,8 @@ const testimonials: Testimonial[] = [
 
 const Testimonials: React.FC = () => {
   const [emblaRef, embla] = useEmblaCarousel({ loop: false, align: "start" });
-  const [canPrev, setCanPrev]   = useState(false);
-  const [canNext, setCanNext]   = useState(false);
+  const [canPrev, setCanPrev] = useState(false);
+  const [canNext, setCanNext] = useState(false);
 
   const onSelect = useCallback(() => {
     if (!embla) return;
@@ -67,12 +67,12 @@ const Testimonials: React.FC = () => {
       <div className="grid lg:grid-cols-[320px_1fr] gap-16 max-w-7xl mx-auto px-4">
         {/* ─── LEFT SIDE ───────────────────────────────────── */}
         <aside className="flex flex-col">
-            <h2 className="text-3xl font-bold text-gray-900 leading-tight dark:text-gray-300">
-              Over&nbsp;1.5&nbsp;lac<br />happy&nbsp;subscribers
-            </h2>
+          <h2 className="text-3xl font-bold text-gray-900 leading-tight dark:text-gray-300">
+            Over&nbsp;1.5&nbsp;lac<br />happy&nbsp;subscribers
+          </h2>
           <div className="mt-1 h-1 w-16 bg-red-500" />
           <p className="mt-6 text-gray-600 max-w-xs dark:text-gray-300">
-            Here's what they have to say about their Kevank experience.
+            Here&rsquo;s what they have to say about their Kevank experience.
           </p>
 
           {/* arrows */}
@@ -110,14 +110,15 @@ const Testimonials: React.FC = () => {
                            bg-[#F6F8FB] rounded-[20px] p-12 relative"
               >
                 {/* decorative quotes */}
-                 {/* decorative quote mark – fixed position */}
                 <svg
                   viewBox="0 0 140 96"
                   className="absolute top-6 right-6 w-28 h-20 text-[#CBD3E6]
                             pointer-events-none select-none overflow-hidden"
                   aria-hidden="true"
                 >
-                  <text x="0" y="80" fontSize="120" fontWeight="700">”</text>
+                  <text x="0" y="80" fontSize="120" fontWeight="700">
+                    ”
+                  </text>
                 </svg>
 
                 {/* avatar + name */}
@@ -140,9 +141,7 @@ const Testimonials: React.FC = () => {
                 </header>
 
                 {/* message */}
-                <p className="mt-8 text-gray-700 leading-7">
-                  {message}
-                </p>
+                <p className="mt-8 text-gray-700 leading-7">{message}</p>
               </article>
             ))}
           </div>

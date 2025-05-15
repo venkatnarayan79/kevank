@@ -4,7 +4,7 @@ import { useState, useRef, useEffect } from "react"
 import type { EmblaCarouselType } from "embla-carousel"
 import Autoplay from "embla-carousel-autoplay"
 
-import { buttonVariants } from "./ui/button"
+/* import { buttonVariants } from "./ui/button" */
 import {
   Carousel,
   CarouselContent,

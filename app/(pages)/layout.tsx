@@ -1,3 +1,6 @@
+// app/(pages)/layout.tsx
+
+import Script from "next/script";
 import type { Metadata } from "next";
 
 import { ThemeProvider } from "@/components/theme-provider";
@@ -20,21 +23,22 @@ export default function RootLayout({
     <html lang="en" suppressHydrationWarning>
       <head>
         {/* Google tag (gtag.js) */}
-        <script async src="https://www.googletagmanager.com/gtag/js?id=G-Z8G81VZVGZ"></script>
-        <script
-          dangerouslySetInnerHTML={{
-            __html: `
-              window.dataLayer = window.dataLayer || [];
-              function gtag(){dataLayer.push(arguments);}
-              gtag('js', new Date());
-              gtag('config', 'G-Z8G81VZVGZ');
-            `,
-          }}
+        <Script
+          strategy="afterInteractive"
+          src="https://www.googletagmanager.com/gtag/js?id=G-Z8G81VZVGZ"
         />
+
+        <Script id="google-analytics" strategy="afterInteractive">
+          {`
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            gtag('config', 'G-Z8G81VZVGZ');
+          `}
+        </Script>
       </head>
-      <body
-        className={`antialiased`}
-      >
+
+      <body className="antialiased">
         <ThemeProvider
           attribute="class"
           defaultTheme="system"
