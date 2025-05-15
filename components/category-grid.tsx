@@ -119,12 +119,13 @@ const CategoryGrid: React.FC = () => {
 
         <div className="flex justify-center gap-8">
           {categories.map(({ name, alt, svg }) => (
-            <a
-              key={name}
-              href="#"
-              aria-label={alt}
-              className="flex flex-col items-center border border-gray-300 dark:border-gray-700 rounded-lg p-6 min-w-[140px] aspect-square transition duration-300 hover:scale-[1.03] hover:shadow-lg hover:border-gray-300 dark:hover:border-gray-700"
-            >
+              <a
+                key={name}
+                href="#"
+                aria-label={alt}
+                className="flex flex-col items-center border dark:border-gray-700 rounded-lg p-6 min-w-[140px] aspect-square transition duration-300 hover:scale-[1.03] hover:shadow-lg hover:border-gray-300 dark:hover:border-gray-700"
+                style={{ borderColor: '#9dd1a8' }}
+              >
               {svg}
               <span className="mt-3 text-lg font-medium text-gray-800 dark:text-gray-200 block text-center">
                 {name}
