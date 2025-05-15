@@ -1,0 +1,13 @@
+.cta-card {
+  @apply flex flex-col items-center justify-center
+         w-80 h-60
+         rounded-xl bg-[#00170A]
+         text-white
+         hover:scale-105 transition;
+}
+.cta-icon {
+  @apply h-14 w-14 stroke-[#8FD0A8];
+}
+.cta-label {
+  @apply mt-6 text-2xl font-semibold;
+}
