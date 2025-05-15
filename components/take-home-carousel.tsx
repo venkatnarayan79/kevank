@@ -54,7 +54,7 @@ const TakeHomeCarousel: React.FC = () => {
   const scrollNext = useCallback(() => emblaApi && emblaApi.scrollNext(), [emblaApi]);
 
   return (
-    <section aria-label="You’ll love to take these home" className="py-20 md:py-24 bg-white">
+    <section aria-label="You’ll love to take these home" className="py-20 md:py-24  bg-[#9dd1a8]">
       <div className="max-w-7xl mx-auto px-4">
         <div className="flex justify-between items-center mb-6 md:mb-10">
           <h2 className="text-2xl md:text-3xl font-bold text-gray-900">You’ll love to take these home</h2>

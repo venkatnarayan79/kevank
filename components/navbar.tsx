@@ -14,7 +14,7 @@ export function Navbar() {
   }
 
   return (
-    <header className="border-b bg-background relative z-50">
+<header className="border-b bg-white dark:bg-[#1c2a1f] relative z-50 text-gray-900 dark:text-white">
       <div className="container mx-auto px-4">
         <div className="flex h-16 items-center justify-between">
           <div className="flex items-center gap-2">
@@ -37,7 +37,7 @@ export function Navbar() {
             <Link
               href="/create-listing"
               onClick={() => setIsMenuOpen(false)}
-              className={buttonVariants({ variant: "default" })}
+              className={buttonVariants({ variant: "default" }) + " bg-[#145214] hover:bg-[#0f3d10] text-white"}
             >
               Create a Listing
             </Link>
@@ -49,7 +49,7 @@ export function Navbar() {
             <Button
               variant="ghost"
               size="icon"
-              className="text-primary"
+              className="text-gray-900 dark:text-white"
               onClick={toggleMenu}
               aria-expanded={isMenuOpen}
             >
