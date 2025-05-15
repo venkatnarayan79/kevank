@@ -1,7 +1,6 @@
 "use client"
 
 import { useState, useRef, useEffect } from "react"
-import Link from "next/link"
 import type { EmblaCarouselType } from "embla-carousel"
 import Autoplay from "embla-carousel-autoplay"
 
@@ -11,7 +10,6 @@ import {
   CarouselContent,
   CarouselItem,
 } from "./ui/carousel"
-import { cn } from "@/lib/utils"
 import { SearchForm } from "@/components/search-form";
 
 // Configuration constants
@@ -102,7 +100,7 @@ export function Hero() {
           {/* Left side: Heading and paragraph */}
           <div className="text-gray-900 dark:text-white max-w-lg self-center">
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 leading-tight">
-              Rent what you need, share what you don't.
+              Rent what you need, share what you don&apos;t.
             </h1>
             <p className="text-xl max-w-md">
               Access thousands of tools, appliances, and equipment in your neighborhood. Save money, reduce waste, and connect with your community.

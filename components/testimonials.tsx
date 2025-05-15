@@ -67,9 +67,9 @@ const Testimonials: React.FC = () => {
       <div className="grid lg:grid-cols-[320px_1fr] gap-16 max-w-7xl mx-auto px-4">
         {/* ─── LEFT SIDE ───────────────────────────────────── */}
         <aside className="flex flex-col">
-          <h2 className="text-3xl font-bold text-gray-900 leading-tight dark:text-gray-300">
-            Over&nbsp;1.5&nbsp;lac<br />happy&nbsp;subscribers
-          </h2>
+            <h2 className="text-3xl font-bold text-gray-900 leading-tight dark:text-gray-300">
+              Over&nbsp;1.5&nbsp;lac<br />happy&nbsp;subscribers
+            </h2>
           <div className="mt-1 h-1 w-16 bg-red-500" />
           <p className="mt-6 text-gray-600 max-w-xs dark:text-gray-300">
             Here's what they have to say about their Kevank experience.
