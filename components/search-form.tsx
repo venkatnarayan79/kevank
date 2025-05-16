@@ -1,4 +1,5 @@
 "use client";
+
 import { useRouter } from "next/navigation";
 import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -53,43 +54,37 @@ const searchFormSchema = z
 
 export type SearchFormData = z.infer<typeof searchFormSchema>;
 
-// ----- Helper Functions & Constants -----
+// ----- Helpers -----
 const combineDateTime = (date: Date, timeString: string): Date => {
   const [timePart, period] = timeString.split(" ");
-  const [hoursStr, minutesStr] = timePart.split(":");
-  let hours = Number(hoursStr);
-  const minutes = Number(minutesStr);
-
+  let [hours, minutes] = timePart.split(":").map(Number);
   if (period === "PM" && hours < 12) hours += 12;
-  else if (period === "AM" && hours === 12) hours = 0;
-
+  if (period === "AM" && hours === 12) hours = 0;
   const result = new Date(date);
   result.setHours(hours, minutes);
   return result;
 };
 
 const generateTimeOptions = () => {
-  const options: string[] = [];
-  for (let hour = 0; hour < 24; hour++) {
-    for (let minute = 0; minute < 60; minute += 30) {
-      const period = hour < 12 ? "AM" : "PM";
-      const displayHour = hour % 12 === 0 ? 12 : hour % 12;
-      const formattedMinute = minute.toString().padStart(2, "0");
-      options.push(`${displayHour}:${formattedMinute} ${period}`);
+  const opts: string[] = [];
+  for (let h = 0; h < 24; h++) {
+    for (let m = 0; m < 60; m += 30) {
+      const period = h < 12 ? "AM" : "PM";
+      const displayHour = h % 12 === 0 ? 12 : h % 12;
+      opts.push(`${displayHour}:${m.toString().padStart(2, "0")} ${period}`);
     }
   }
-  return options;
+  return opts;
 };
 const timeOptions = generateTimeOptions();
 
-// ----- Reusable UI Components -----
+// ----- DatePickerPopover -----
 type DatePickerPopoverProps = {
   value: Date;
-  onChange: (value: Date) => void;
+  onChange: (date: Date) => void;
   error?: string;
   minDate?: Date;
 };
-
 const DatePickerPopover: React.FC<DatePickerPopoverProps> = ({
   value,
   onChange,
@@ -101,7 +96,7 @@ const DatePickerPopover: React.FC<DatePickerPopoverProps> = ({
       <Button
         variant="outline"
         className={cn(
-          "w-full justify-start text-left font-normal",
+          "w-full text-left font-normal border border-white justify-start",
           error && "border-red-500",
           !value && "text-muted-foreground"
         )}
@@ -114,9 +109,7 @@ const DatePickerPopover: React.FC<DatePickerPopoverProps> = ({
       <Calendar
         mode="single"
         selected={value}
-        onSelect={(day) => {
-          if (day) onChange(day); // Only call onChange if a valid date is returned.
-        }}
+        onSelect={(day) => day && onChange(day)}
         disabled={(date) => (minDate ? date < minDate : false)}
         initialFocus
       />
@@ -124,31 +117,30 @@ const DatePickerPopover: React.FC<DatePickerPopoverProps> = ({
   </Popover>
 );
 
+// ----- TimeSelect -----
 type TimeSelectProps = {
   value: string;
-  onChange: (value: string) => void;
+  onChange: (val: string) => void;
   error?: string;
 };
-
 const TimeSelect: React.FC<TimeSelectProps> = ({ value, onChange, error }) => (
   <Select value={value} onValueChange={onChange}>
-    <SelectTrigger className={cn(error && "border-red-500")}>
+    <SelectTrigger className={cn("border border-white", error && "border-red-500")}>
       <SelectValue placeholder="Select time" />
     </SelectTrigger>
     <SelectContent>
-      {timeOptions.map((time) => (
-        <SelectItem key={time} value={time}>
-          {time}
+      {timeOptions.map((t) => (
+        <SelectItem key={t} value={t}>
+          {t}
         </SelectItem>
       ))}
     </SelectContent>
   </Select>
 );
 
-// ----- Main Component -----
+// ----- Main Form -----
 export function SearchForm() {
   const router = useRouter();
-
   const {
     register,
     handleSubmit,
@@ -169,63 +161,38 @@ export function SearchForm() {
 
   const startDate = watch("startDate");
 
-  const onSubmit = async (data: SearchFormData) => {
-    // Helper to parse a 12-hour time string (e.g., "9:00 AM") into hour and minute values
-    function parseTime(timeStr: string) {
-      const [time, modifier] = timeStr.split(" ");
-      const [rawHours, rawMinutes] = time.split(":").map(Number);
-      let hours = rawHours;
-      const minutes = rawMinutes;
-      if (modifier === "PM" && hours !== 12) {
-        hours += 12;
-      }
-      if (modifier === "AM" && hours === 12) {
-        hours = 0;
-      }
-      return { hours, minutes };
-    }
+  const onSubmit = (data: SearchFormData) => {
+    const { hours: sh, minutes: sm } = parseTime(data.startTime);
+    const { hours: eh, minutes: em } = parseTime(data.endTime);
+    const sd = new Date(data.startDate);
+    const ed = new Date(data.endDate);
+    sd.setHours(sh, sm, 0, 0);
+    ed.setHours(eh, em, 0, 0);
 
-    // Clone the date objects so we don't mutate the originals
-    const startDateTime = new Date(data.startDate);
-    const endDateTime = new Date(data.endDate);
-
-    // Extract hours and minutes from the time strings
-    const { hours: startHours, minutes: startMinutes } = parseTime(data.startTime);
-    const { hours: endHours, minutes: endMinutes } = parseTime(data.endTime);
-
-    // Set the time values on the date objects (seconds and milliseconds are set to 0)
-    startDateTime.setHours(startHours, startMinutes, 0, 0);
-    endDateTime.setHours(endHours, endMinutes, 0, 0);
-
-    // Now startDateTime and endDateTime are Date objects combining the separate date and time fields.
-    const formattedData = {
+    const params = new URLSearchParams({
       searchQuery: data.searchQuery,
       zipCode: data.zipCode,
-      startDateTime, // Date object
-      endDateTime,   // Date object
-    };
-
-    console.log("Search form submitted with data:", formattedData);
-
-    // If needed for routing or query parameters, you might convert the Date objects to strings.
-    const params = new URLSearchParams();
-    params.append("searchQuery", data.searchQuery);
-    params.append("zipCode", data.zipCode);
-    params.append("startDateTime", startDateTime.toISOString());
-    params.append("endDateTime", endDateTime.toISOString());
+      startDateTime: sd.toISOString(),
+      endDateTime: ed.toISOString(),
+    });
 
     router.push(`/request-details?${params.toString()}`);
   };
 
+  function parseTime(timeStr: string) {
+    const [time, modifier] = timeStr.split(" ");
+    let [h, m] = time.split(":").map(Number);
+    if (modifier === "PM" && h < 12) h += 12;
+    if (modifier === "AM" && h === 12) h = 0;
+    return { hours: h, minutes: m };
+  }
+
   return (
-    <div
-      id="search-form"
-      className="bg-background rounded-lg shadow-lg p-6 max-w-md mx-auto"
-    >
+    <div id="search-form" className="bg-transparent border-none p-6 w-full max-w-full">
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
-        {/* Search Query */}
+        {/* Search */}
         <div>
-          <Label htmlFor="search" className="mb-1 block">
+          <Label htmlFor="search" className="mb-1 block font-semibold">
             What are you looking for? <span className="text-red-500">*</span>
           </Label>
           <div className="relative">
@@ -234,8 +201,7 @@ export function SearchForm() {
               id="search"
               placeholder="Search for products..."
               {...register("searchQuery")}
-              className={cn("pl-9", errors.searchQuery && "border-red-500")}
-              required
+              className={cn("pl-9 border border-white", errors.searchQuery && "border-red-500")}
             />
           </div>
           {errors.searchQuery && (
@@ -243,27 +209,26 @@ export function SearchForm() {
           )}
         </div>
 
-        {/* Zip Code */}
+        {/* Zip */}
         <div>
-          <Label htmlFor="zipcode" className="mb-1 block">
+          <Label htmlFor="zipcode" className="mb-1 block font-semibold">
             Zip Code <span className="text-red-500">*</span>
           </Label>
           <Input
             id="zipcode"
             placeholder="Enter Zip code"
             {...register("zipCode")}
-            className={cn(errors.zipCode && "border-red-500")}
-            required
+            className={cn("border border-white", errors.zipCode && "border-red-500")}
           />
           {errors.zipCode && (
             <p className="text-red-500 text-xs mt-1">{errors.zipCode.message}</p>
           )}
         </div>
 
-        {/* Start Date & Time */}
+        {/* Start */}
         <div>
-          <Label className="mb-1 block">
-            Start Date & Time <span className="text-red-500">*</span>
+          <Label className="mb-1 block font-semibold">
+            Start Date &amp; Time <span className="text-red-500">*</span>
           </Label>
           <div className="flex gap-2">
             <div className="flex-1">
@@ -296,10 +261,10 @@ export function SearchForm() {
           </div>
         </div>
 
-        {/* End Date & Time */}
+        {/* End */}
         <div>
-          <Label className="mb-1 block">
-            End Date & Time <span className="text-red-500">*</span>
+          <Label className="mb-1 block font-semibold">
+            End Date &amp; Time <span className="text-red-500">*</span>
           </Label>
           <div className="flex gap-2">
             <div className="flex-1">
@@ -332,7 +297,12 @@ export function SearchForm() {
           </div>
         </div>
 
-        <Button type="submit" className="w-full bg-green-600 hover:bg-green-700" disabled={isSubmitting}>
+        {/* Submit */}
+        <Button
+          type="submit"
+          className="w-full bg-green-600 hover:bg-green-700"
+          disabled={isSubmitting}
+        >
           {isSubmitting ? (
             <>
               <Loader2 className="mr-2 h-4 w-4 animate-spin" />

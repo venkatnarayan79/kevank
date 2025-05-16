@@ -53,9 +53,9 @@ const TakeHomeCarousel: React.FC = () => {
   const scrollPrev = useCallback(() => emblaApi && emblaApi.scrollPrev(), [emblaApi]);
   const scrollNext = useCallback(() => emblaApi && emblaApi.scrollNext(), [emblaApi]);
 
-  const scrollToHero = () => {
-    const hero = document.getElementById("hero");
-    if (hero) hero.scrollIntoView({ behavior: "smooth" });
+  // scroll to top of the page
+  const scrollToTop = () => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
   return (
@@ -78,14 +78,19 @@ const TakeHomeCarousel: React.FC = () => {
               aria-label="Previous slide"
               className={`
                 h-11 w-11 rounded-full bg-transparent flex items-center justify-center
-                ${canScrollPrev ? "hover:bg-black/20 ring-2 ring-black" : "opacity-40"}
+                ${canScrollPrev ? "hover:ring-2 hover:ring-black" : "opacity-40"}
                 transition
               `}
             >
-              {/* arrow3 left */}
-              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 48 48" fill="none">
-                <circle cx="24" cy="24" r="22" stroke="black" strokeWidth="4"/>
-                <path d="M28 16 L20 24 L28 32" stroke="black" strokeWidth="4" fill="none" strokeLinecap="round" strokeLinejoin="round"/>
+              {/* LEFT arrow from Testimonials */}
+              <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 48 48" fill="none">
+                <path
+                  d="M32 12 L16 24 L32 36"
+                  stroke="black"
+                  strokeWidth="4"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
               </svg>
             </button>
             <button
@@ -94,14 +99,19 @@ const TakeHomeCarousel: React.FC = () => {
               aria-label="Next slide"
               className={`
                 h-11 w-11 rounded-full bg-transparent flex items-center justify-center
-                ${canScrollNext ? "hover:bg-black/20 ring-2 ring-black" : "opacity-40"}
+                ${canScrollNext ? "hover:ring-2 hover:ring-black" : "opacity-40"}
                 transition
               `}
             >
-              {/* arrow3 right */}
-              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 48 48" fill="none">
-                <circle cx="24" cy="24" r="22" stroke="black" strokeWidth="4"/>
-                <path d="M20 16 L28 24 L20 32" stroke="black" strokeWidth="4" fill="none" strokeLinecap="round" strokeLinejoin="round"/>
+              {/* RIGHT arrow from Testimonials */}
+              <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 48 48" fill="none">
+                <path
+                  d="M16 12 L32 24 L16 36"
+                  stroke="black"
+                  strokeWidth="4"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
               </svg>
             </button>
           </div>
@@ -131,7 +141,7 @@ const TakeHomeCarousel: React.FC = () => {
                     <span className="text-lg font-semibold text-gray-900">{rent}</span>
                   </div>
                   <button
-                    onClick={scrollToHero}
+                    onClick={scrollToTop}
                     className="px-4 py-2 text-sm font-medium border border-[#8FD0A8] text-gray-800 rounded-md transition hover:bg-[#8FD0A8]/10"
                     type="button"
                   >
