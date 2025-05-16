@@ -5,8 +5,8 @@ import React from "react";
 /* ─── category data ────────────────────────────────────────────── */
 const categories = [
   {
-    name: "Furniture",
-    alt: "Furniture category",
+    name: "Bike",
+    alt: "Bike",
     svg: (
       <svg
         xmlns="http://www.w3.org/2000/svg"

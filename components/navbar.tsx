@@ -14,7 +14,7 @@ export function Navbar() {
   }
 
   return (
-<header className="border-b bg-white dark:bg-[#1c2a1f] relative z-50 text-gray-900 dark:text-white">
+<header className="border-b bg-[#1c2a1f] dark:bg-[#1c2a1f] relative z-50 text-gray-900 dark:text-white">
       <div className="container mx-auto px-4">
         <div className="flex h-16 items-center justify-between">
           <div className="flex items-center gap-2">
@@ -37,11 +37,11 @@ export function Navbar() {
             <Link
               href="/create-listing"
               onClick={() => setIsMenuOpen(false)}
-              className={buttonVariants({ variant: "green" })}
+              className={`${buttonVariants({ variant: "ghost" })} hover:bg-[#eaebed] border border-[#9dd1a8] rounded-md hover:border-[#9dd1a8]`}
             >
               Create a Listing
             </Link>
-            <ModeToggle />
+            {/* <ModeToggle /> */}
           </nav>
 
           {/* Mobile Controls */}
@@ -56,7 +56,7 @@ export function Navbar() {
               {isMenuOpen ? <X className="h-6 w-6" /> : <MenuIcon className="h-6 w-6" />}
               <span className="sr-only">Toggle menu</span>
             </Button>
-            <ModeToggle />
+            {/* <ModeToggle /> */}
           </div>
         </div>
       </div>
@@ -89,7 +89,7 @@ export function Navbar() {
             <Link
               href="/create-listing"
               onClick={() => setIsMenuOpen(false)}
-              className={buttonVariants({ variant: "green" })}
+              className={`${buttonVariants({ variant: "ghost" })} hover:bg-[#eaebed] border border-[#9dd1a8] rounded-md hover:border-[#9dd1a8]`}
             >
               Create a Listing
             </Link>
