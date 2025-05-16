@@ -47,12 +47,15 @@ export function Hero() {
         setApi={setApi}
         plugins={[autoplayPlugin.current]}
         opts={{ loop: true }}
-        className="w-full"
+        className="w-screen"
       >
-        {/* Adjusted heights: 350px / 550px / 700px */}
-        <CarouselContent className="h-[350px] sm:h-[550px] md:h-[700px] w-full">
+        {/* Full-screen height + width */}
+        <CarouselContent className="h-screen w-screen">
           {backgroundImages.map((img, idx) => (
-            <CarouselItem key={idx} className="relative">
+            <CarouselItem
+              key={idx}
+              className="relative flex-shrink-0 flex-grow-0 basis-full"
+            >
               <div
                 className="absolute inset-0 bg-cover bg-center"
                 style={{ backgroundImage: `url(${img})` }}
@@ -74,10 +77,10 @@ export function Hero() {
               <button
                 key={idx}
                 onClick={() => api?.scrollTo(idx)}
-                className={`w-2 h-2 rounded-full transition-all ${
+                className={`rounded-full transition-all ${
                   isCurrent
-                    ? "bg-[#9DD1A8] w-4"
-                    : "bg-[#9DD1A8]/50 hover:bg-[#9DD1A8]/80"
+                    ? "bg-[#9DD1A8] w-4 h-4"
+                    : "bg-[#9DD1A8]/50 w-2 h-2 hover:bg-[#9DD1A8]/80"
                 }`}
                 aria-label={`Go to slide ${idx + 1}`}
                 aria-current={isCurrent ? "true" : "false"}
