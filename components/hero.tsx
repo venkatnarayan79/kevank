@@ -10,7 +10,7 @@ import {
   CarouselContent,
   CarouselItem,
 } from "./ui/carousel"
-import { SearchForm } from "@/components/search-form";
+import { SearchForm } from "@/components/search-form"
 
 // Configuration constants
 const AUTO_PLAY_DELAY = 3000 // Autoplay delay in milliseconds
@@ -98,11 +98,11 @@ export function Hero() {
       <div className="absolute inset-0 flex items-center justify-center z-10 pointer-events-auto">
         <div className="container px-4 grid grid-cols-1 md:grid-cols-2 gap-8 max-w-7xl">
           {/* Left side: Heading and paragraph */}
-          <div className="text-gray-900 dark:text-white max-w-lg self-center">
-            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 leading-tight">
+          <div className="max-w-lg self-center">
+            <h1 className="text-black text-4xl md:text-5xl lg:text-6xl font-bold mb-6 leading-tight">
               Rent what you need, share what you don&apos;t.
             </h1>
-            <p className="text-xl max-w-md">
+            <p className="text-black text-xl max-w-md">
               Access thousands of tools, appliances, and equipment in your neighborhood. Save money, reduce waste, and connect with your community.
             </p>
           </div>
