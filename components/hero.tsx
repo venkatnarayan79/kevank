@@ -23,10 +23,18 @@ export function Hero() {
 
   useEffect(() => {
     if (!api) return;
-    const onSelect = () => setSelectedIndex(api.selectedScrollSnap());
+
+    const onSelect = () => {
+      setSelectedIndex(api.selectedScrollSnap());
+    };
+
     api.on("select", onSelect);
+    // initialize the indicator
     setSelectedIndex(api.selectedScrollSnap());
-    return () => api.off("select", onSelect);
+
+    return () => {
+      api.off("select", onSelect);
+    };
   }, [api]);
 
   const backgroundImages = [
@@ -99,7 +107,9 @@ export function Hero() {
               Rent what you need, share what you don’t.
             </h1>
             <p className="text-black text-xl max-w-md font-light">
-              Access thousands of tools, appliances, and equipment in your neighborhood. Save money, reduce waste, and connect with your community.
+              Access thousands of tools, appliances, and equipment in your
+              neighborhood. Save money, reduce waste, and connect with your
+              community.
             </p>
           </div>
 
