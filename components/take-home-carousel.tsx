@@ -53,40 +53,76 @@ const TakeHomeCarousel: React.FC = () => {
   const scrollPrev = useCallback(() => emblaApi && emblaApi.scrollPrev(), [emblaApi]);
   const scrollNext = useCallback(() => emblaApi && emblaApi.scrollNext(), [emblaApi]);
 
+  const scrollToHero = () => {
+    const hero = document.getElementById("hero");
+    if (hero) hero.scrollIntoView({ behavior: "smooth" });
+  };
+
   return (
-    <section aria-label="You’ll love to take these home" className="py-20 md:py-24  bg-[#9dd1a8]">
+    <section aria-label="You’ll love to take these home" className="py-20 md:py-24 bg-[#9dd1a8]">
       <div className="max-w-7xl mx-auto px-4">
-        <div className="flex justify-between items-center mb-6 md:mb-10">
-          <h2 className="text-2xl md:text-3xl font-bold text-gray-900">You’ll love to take these home</h2>
-          <div className="btn-group hidden sm:flex gap-3">
+        {/* Heading + HR + Nav */}
+        <div className="mb-8 md:mb-12">
+          <h2
+            className="text-2xl md:text-3xl font-bold text-gray-900 text-center"
+            style={{ fontFamily: "Montserrat, sans-serif" }}
+          >
+            You’ll love to<br />
+            take these home
+          </h2>
+          <hr className="border-t-2 border-white w-24 mx-auto mt-3" />
+          <div className="mt-4 flex justify-end gap-2">
             <button
               onClick={scrollPrev}
               disabled={!canScrollPrev}
               aria-label="Previous slide"
-              className="h-11 w-11 rounded-full bg-white/80 backdrop-blur shadow ring-1 ring-gray-200 disabled:opacity-40"
+              className={`
+                h-11 w-11 rounded-full bg-transparent flex items-center justify-center
+                ${canScrollPrev ? "hover:ring-2 hover:ring-black" : "opacity-40"}
+                transition
+              `}
             >
-              ‹
+              {/* left arrow only */}
+              <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 48 48" fill="none">
+                <path
+                  d="M32 12 L16 24 L32 36"
+                  stroke="black"
+                  strokeWidth="4"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+              </svg>
             </button>
             <button
               onClick={scrollNext}
               disabled={!canScrollNext}
               aria-label="Next slide"
-              className="h-11 w-11 rounded-full bg-white/80 backdrop-blur shadow ring-1 ring-gray-200 disabled:opacity-40"
+              className={`
+                h-11 w-11 rounded-full bg-transparent flex items-center justify-center
+                ${canScrollNext ? "hover:ring-2 hover:ring-black" : "opacity-40"}
+                transition
+              `}
             >
-              ›
+              {/* right arrow only */}
+              <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 48 48" fill="none">
+                <path
+                  d="M16 12 L32 24 L16 36"
+                  stroke="black"
+                  strokeWidth="4"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+              </svg>
             </button>
           </div>
         </div>
-        <div
-          className="embla overflow-hidden"
-          ref={emblaRef}
-          aria-live="polite"
-        >
+
+        {/* Embla Carousel */}
+        <div className="embla overflow-hidden" ref={emblaRef} aria-live="polite">
           <div className="embla__container flex gap-6 md:gap-8 px-1">
             {slideCards.map(({ id, name, rent, imageName }) => (
-              <a
+              <div
                 key={id}
-                href={`/product/${id}`}
                 className="flex flex-col w-64 md:w-72 lg:w-80 flex-shrink-0 rounded-lg border-[4px] border-[#8FD0A8] bg-white p-5"
               >
                 <Image
@@ -96,20 +132,23 @@ const TakeHomeCarousel: React.FC = () => {
                   alt={name}
                   className="aspect-square object-cover rounded"
                 />
-                <span className="mt-4 font-semibold text-gray-900 leading-snug line-clamp-2">{name}</span>
+                <span className="mt-4 font-semibold text-gray-900 leading-snug line-clamp-2">
+                  {name}
+                </span>
                 <div className="mt-3 flex items-center justify-between">
                   <div>
                     <span className="text-sm text-gray-500 block">Rent</span>
                     <span className="text-lg font-semibold text-gray-900">{rent}</span>
                   </div>
                   <button
+                    onClick={scrollToHero}
                     className="px-4 py-2 text-sm font-medium border border-[#8FD0A8] text-gray-800 rounded-md transition hover:bg-[#8FD0A8]/10"
                     type="button"
                   >
                     See More
                   </button>
                 </div>
-              </a>
+              </div>
             ))}
           </div>
         </div>
