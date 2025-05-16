@@ -40,12 +40,6 @@ export function Hero() {
   const backgroundImages = [
     "young-woman-riding-electric-scooter.png",
     "equipment-4521859_1920.jpg",
-    "kavenk_homepage.jpg",
-    "lawn-care-643559_1280.jpg",
-    "man-498473_1920.jpg",
-    "tent-548022_1920.jpg",
-    "vacuum-cleaner-657719_1280.jpg",
-    "woman-6572974_1280.jpg",
   ];
 
   return (
