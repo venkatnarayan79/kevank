@@ -57,9 +57,14 @@ export type SearchFormData = z.infer<typeof searchFormSchema>;
 // ----- Helpers -----
 const combineDateTime = (date: Date, timeString: string): Date => {
   const [timePart, period] = timeString.split(" ");
-  let [hours, minutes] = timePart.split(":").map(Number);
+  const [hourStr, minuteStr] = timePart.split(":");
+
+  let hours = Number(hourStr);
+  const minutes = Number(minuteStr);
+
   if (period === "PM" && hours < 12) hours += 12;
   if (period === "AM" && hours === 12) hours = 0;
+
   const result = new Date(date);
   result.setHours(hours, minutes);
   return result;
@@ -161,6 +166,19 @@ export function SearchForm() {
 
   const startDate = watch("startDate");
 
+  function parseTime(timeStr: string) {
+    const [time, modifier] = timeStr.split(" ");
+    const [hourStr, minuteStr] = time.split(":");
+
+    let h = Number(hourStr);
+    const m = Number(minuteStr);
+
+    if (modifier === "PM" && h < 12) h += 12;
+    if (modifier === "AM" && h === 12) h = 0;
+
+    return { hours: h, minutes: m };
+  }
+
   const onSubmit = (data: SearchFormData) => {
     const { hours: sh, minutes: sm } = parseTime(data.startTime);
     const { hours: eh, minutes: em } = parseTime(data.endTime);
@@ -178,14 +196,6 @@ export function SearchForm() {
 
     router.push(`/request-details?${params.toString()}`);
   };
-
-  function parseTime(timeStr: string) {
-    const [time, modifier] = timeStr.split(" ");
-    let [h, m] = time.split(":").map(Number);
-    if (modifier === "PM" && h < 12) h += 12;
-    if (modifier === "AM" && h === 12) h = 0;
-    return { hours: h, minutes: m };
-  }
 
   return (
     <div id="search-form" className="bg-transparent border-none p-6 w-full max-w-full">

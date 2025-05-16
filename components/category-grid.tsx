@@ -1,6 +1,7 @@
 "use client";
 
 import React from "react";
+import Image from "next/image";
 
 /* ─── category data ────────────────────────────────────────────── */
 const categories = [
@@ -42,10 +43,12 @@ const CategoryGrid: React.FC = () => {
               aria-label={alt}
               className="w-full aspect-square flex flex-col items-center justify-center border border-black rounded-lg p-6 bg-white transition duration-300 hover:scale-105 hover:shadow-lg"
             >
-              <img
+              <Image
                 src={imageSrc}
                 alt={alt}
-                className="h-10 w-10 object-contain"
+                width={40}
+                height={40}
+                className="object-contain"
               />
               <span className="mt-3 text-lg font-medium text-gray-800 text-center">
                 {name}
