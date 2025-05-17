@@ -38,8 +38,12 @@ export function Hero() {
   }, [api]);
 
   const backgroundImages = [
-    "young-woman-riding-electric-scooter.png",
-    "equipment-4521859_1920.jpg",
+    "header1.jpg",
+    "header2.jpg",
+    "header3.jpg",
+    "header4.jpg",
+    "header5.jpg",
+
   ];
 
   return (
