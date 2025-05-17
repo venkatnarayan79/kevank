@@ -199,6 +199,9 @@ export function SearchForm() {
 
   return (
     <div id="search-form" className="bg-transparent border-none p-6 w-full max-w-full">
+      <h3 className="text-left text-2xl md:text-3xl font-bold uppercase mb-4 leading-none">
+        FIND YOUR PERFECT RENTAL
+      </h3>
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
         {/* Search */}
         <div>

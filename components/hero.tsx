@@ -43,7 +43,6 @@ export function Hero() {
     "header3.jpg",
     "header4.jpg",
     "header5.jpg",
-
   ];
 
   return (
@@ -56,7 +55,7 @@ export function Hero() {
         className="w-screen"
       >
         {/* Full-screen height + width */}
-        <CarouselContent className="h-screen w-screen">
+        <CarouselContent className="h-[74vh] w-screen">
           {backgroundImages.map((img, idx) => (
             <CarouselItem
               key={idx}
@@ -112,13 +111,10 @@ export function Hero() {
           </div>
 
           {/* Search form */}
-          <div className="bg-white dark:bg-[#1C2A1F] rounded-lg p-8 max-w-md mx-auto text-gray-900 dark:text-white">
-            <h3 className="text-center text-2xl md:text-3xl font-bold uppercase mb-6 leading-snug">
-              FIND YOUR PERFECT
-              <br />
-              RENTAL
-            </h3>
-            <SearchForm />
+          <div className="bg-white dark:bg-[#1C2A1F] rounded-lg p-4 max-w-sm mx-auto text-gray-900 dark:text-white">
+            <div className="mt-0">
+              <SearchForm />
+            </div>
           </div>
         </div>
       </div>
