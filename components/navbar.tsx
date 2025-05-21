@@ -3,7 +3,7 @@
 import { useState } from "react"
 import Link from "next/link"
 import { Button, buttonVariants } from "@/components/ui/button"
-import { ModeToggle } from "@/components/mode-toggle"
+// import { ModeToggle } from "@/components/mode-toggle"
 import { MenuIcon, X } from "lucide-react"
 
 export function Navbar() {
@@ -41,7 +41,7 @@ export function Navbar() {
             >
               Create a Listing
             </Link>
-            <ModeToggle />
+            {/* <ModeToggle />  ← theme toggle disabled */}
           </nav>
 
           {/* Mobile Controls */}
@@ -56,7 +56,7 @@ export function Navbar() {
               {isMenuOpen ? <X className="h-6 w-6" /> : <MenuIcon className="h-6 w-6" />}
               <span className="sr-only">Toggle menu</span>
             </Button>
-            <ModeToggle />
+            {/* <ModeToggle />  ← theme toggle disabled */}
           </div>
         </div>
       </div>

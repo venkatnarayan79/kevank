@@ -1,22 +1,21 @@
 import { Hero } from "@/components/hero";
-import { SearchForm } from "@/components/search-form";
-import { RecommendedCarousel } from "@/components/ui/RecommendedCarousel";
+import CategoryGrid from "@/components/category-grid";
+import TakeHomeCarousel from "@/components/take-home-carousel";
+import HowItWorks from "@/components/how-it-works";
+import CtaBanner from "@/components/cta-banner";
+import Testimonials from "@/components/testimonials";
+
 
 export default function Home() {
 
   return (
     <main className="min-h-screen">
       <Hero />
-      <RecommendedCarousel
-        mainHeading="Recommended Rentals"
-        subHeading="Discover popular items to rent"
-      />
-      <div className="container mx-auto px-4 py-12">
-        <div className="max-w-4xl mx-auto">
-          <h2 className="text-3xl font-bold text-center mb-8">Find Your Perfect Rental</h2>
-          <SearchForm />
-        </div>
-      </div>
+      <CategoryGrid />
+      <TakeHomeCarousel />
+      <HowItWorks />
+      <CtaBanner />
+      <Testimonials />
     </main>
   );
 }
