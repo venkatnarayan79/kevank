@@ -89,7 +89,7 @@ export function Navbar() {
             <Link
               href="/create-listing"
               onClick={() => setIsMenuOpen(false)}
-              className={buttonVariants({ variant: "default" })}
+              className={`${buttonVariants({ variant: "ghost" })} hover:bg-[#eaebed] border border-[#9dd1a8] rounded-md hover:border-[#9dd1a8]`}
             >
               Create a Listing
             </Link>
