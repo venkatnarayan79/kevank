@@ -106,8 +106,9 @@ const DatePickerPopover: React.FC<DatePickerPopoverProps> = ({
           !value && "text-muted-foreground"
         )}
       >
-        <CalendarIcon className="mr-2 h-4 w-4" />
+        <CalendarIcon className="mr-2 h-4 w-2" />
         {value ? format(value, "PPP") : "Select date"}
+
       </Button>
     </PopoverTrigger>
     <PopoverContent className="w-auto p-0" align="start">
@@ -170,7 +171,6 @@ export function SearchForm() {
   const startDate = watch("startDate");
 
   const onSubmit = async (data: SearchFormData) => {
-    // Helper to parse a 12-hour time string (e.g., "9:00 AM") into hour and minute values
     function parseTime(timeStr: string) {
       const [time, modifier] = timeStr.split(" ");
       const [rawHours, rawMinutes] = time.split(":").map(Number);
@@ -184,31 +184,25 @@ export function SearchForm() {
       }
       return { hours, minutes };
     }
-    
 
-    // Clone the date objects so we don't mutate the originals
     const startDateTime = new Date(data.startDate);
     const endDateTime = new Date(data.endDate);
 
-    // Extract hours and minutes from the time strings
     const { hours: startHours, minutes: startMinutes } = parseTime(data.startTime);
     const { hours: endHours, minutes: endMinutes } = parseTime(data.endTime);
 
-    // Set the time values on the date objects (seconds and milliseconds are set to 0)
     startDateTime.setHours(startHours, startMinutes, 0, 0);
     endDateTime.setHours(endHours, endMinutes, 0, 0);
 
-    // Now startDateTime and endDateTime are Date objects combining the separate date and time fields.
     const formattedData = {
       searchQuery: data.searchQuery,
       zipCode: data.zipCode,
-      startDateTime, // Date object
-      endDateTime,   // Date object
+      startDateTime,
+      endDateTime,
     };
 
     console.log("Search form submitted with data:", formattedData);
 
-    // If needed for routing or query parameters, you might convert the Date objects to strings.
     const params = new URLSearchParams();
     params.append("searchQuery", data.searchQuery);
     params.append("zipCode", data.zipCode);
@@ -221,16 +215,29 @@ export function SearchForm() {
   return (
     <div
       id="search-form"
-      className="bg-background rounded-lg shadow-lg p-6 max-w-fit mx-auto"
+      className="p-1 max-w-fit mx-auto"
     >
+      {/* ─── NEW HEADING ───────────────────────────────────────── */}
+      <h2
+        className="
+          text-foreground        /* light/white text               */
+          font-bold              /* bold weight                    */
+          text-lg sm:text-xl     /* responsive sizing              */
+          leading-tight          /* tighter line-height            */
+          mb-3                   /* no bottom spacing              */
+        "
+      >
+        FIND YOUR PERFECT<br />RENTAL
+      </h2>
+      {/* ───────────────────────────────────────────────────────── */}
+
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
         <div className="space-y-4">
-          <div className="flex flex-col sm:flex-row gap-4">
+          <div className="flex flex-col gap-4">
             {/* Search Query */}
             <div className="relative flex-1">
               <Label htmlFor="search" className="mb-1 block">
-                What are you looking for?{" "}
-                <span className="text-red-500">*</span>
+                What are you looking for? <span className="text-red-500">*</span>
               </Label>
               <div className="relative">
                 <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
@@ -250,7 +257,7 @@ export function SearchForm() {
             </div>
 
             {/* Zip Code */}
-            <div className="w-full sm:w-[180px]">
+            <div className="relative flex-1">
               <Label htmlFor="zipcode" className="mb-1 block">
                 Zip Code <span className="text-red-500">*</span>
               </Label>
@@ -276,7 +283,7 @@ export function SearchForm() {
               <Label className="block mb-1">
                 Start Date & Time <span className="text-red-500">*</span>
               </Label>
-              <div className="flex flex-col sm:flex-row gap-2">
+              <div className="flex flex-col sm:flex-row gap-5">
                 <div className="flex-1">
                   <Controller
                     control={control}
@@ -317,7 +324,7 @@ export function SearchForm() {
               <Label className="block mb-1">
                 End Date & Time <span className="text-red-500">*</span>
               </Label>
-              <div className="flex flex-col sm:flex-row gap-2">
+              <div className="flex flex-col sm:flex-row gap-5">
                 <div className="flex-1">
                   <Controller
                     control={control}

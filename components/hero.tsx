@@ -53,7 +53,7 @@ export function Hero() {
         className="w-full"
       >
         {/* Slightly shorter on mobile so text + form fit */}
-        <CarouselContent className="h-[850px] md:h-[500px]">
+        <CarouselContent className="h-[900px] md:h-[550px]">
           {backgroundImages.map((img, i) => (
             <CarouselItem key={i} className="relative h-full">
               <div
@@ -102,12 +102,12 @@ export function Hero() {
 
         {/* Desktop grid */}
         <div className="hidden md:grid container mx-auto h-full px-4 grid-cols-12 gap-x-6 items-center pointer-events-auto">
-          <div className="col-start-5 col-span-4 text-black space-y-4">
+          <div className="col-start-5 col-span-3 text-black space-y-4">
             <h1 className="font-bold leading-tight text-[clamp(2rem,6vw,35pt)]">
               RENT WHAT<br />YOU NEED,<br />SHARE WHAT<br />YOU DON'T.
             </h1>
             <p className="text-base md:text-xl max-w-prose">
-              Access thousands of tools, appliances, and equipment in your neighborhood. Save money, reduce waste, and connect with your community.
+              Access thousands of tools, appliances,<br /> and equipment in your neighborhood.<br /> Save money, reduce waste, and connect<br /> with your community.
             </p>
           </div>
           <div className="col-start-9 col-span-3 flex justify-start">
