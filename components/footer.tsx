@@ -1,5 +1,6 @@
-import Link from "next/link"
-import { Mail } from "lucide-react"
+import Link from "next/link";
+import Image from "next/image";
+import { Mail } from "lucide-react";
 
 export function Footer() {
   return (
@@ -12,7 +13,7 @@ export function Footer() {
               Kavenk
             </Link>
             <p className="text-muted-foreground">
-              {"Find what you need with our easy to use platform. Search from millions of items."}
+              Find what you need with our easy to use platform. Search from millions of items.
             </p>
           </div>
 
@@ -26,7 +27,10 @@ export function Footer() {
                 </Link>
               </li>
               <li>
-                <Link href="/create-listing" className="text-muted-foreground hover:text-primary transition-colors">
+                <Link
+                  href="/create-listing"
+                  className="text-muted-foreground hover:text-primary transition-colors"
+                >
                   Create a Listing
                 </Link>
               </li>
@@ -47,7 +51,7 @@ export function Footer() {
                 <Link
                   href="mailto:contact@kavenk.com"
                   className="text-muted-foreground hover:text-primary transition-colors"
-                > 
+                >
                   contact@kavenk.com
                 </Link>
               </li>
@@ -71,7 +75,13 @@ export function Footer() {
                 rel="noopener noreferrer"
                 className="flex items-center justify-center w-10 h-10 rounded-full bg-[#87a96b] hover:bg-[#9cbc85] transition-colors"
               >
-                <img src="/facebook.png" alt="Facebook" className="w-5 h-5" />
+                <Image
+                  src="/facebook.png"
+                  alt="Facebook"
+                  width={20}
+                  height={20}
+                  className="object-contain"
+                />
               </Link>
               <Link
                 href="https://www.instagram.com/yourpage"
@@ -79,7 +89,13 @@ export function Footer() {
                 rel="noopener noreferrer"
                 className="flex items-center justify-center w-10 h-10 rounded-full bg-[#87a96b] hover:bg-[#9cbc85] transition-colors"
               >
-                <img src="/insta.png" alt="Instagram" className="w-5 h-5" />
+                <Image
+                  src="/insta.png"
+                  alt="Instagram"
+                  width={20}
+                  height={20}
+                  className="object-contain"
+                />
               </Link>
             </div>
 
@@ -96,5 +112,5 @@ export function Footer() {
         </div>
       </div>
     </footer>
-  )
+  );
 }

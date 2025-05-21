@@ -1,10 +1,11 @@
 import type { Metadata } from "next";
+import Script from "next/script";
 
 import { ThemeProvider } from "@/components/theme-provider";
-
-import "./globals.css";
 import { Navbar } from "@/components/navbar";
 import { Footer } from "@/components/footer";
+
+import "./globals.css";
 
 export const metadata: Metadata = {
   title: "Kavenk",
@@ -19,22 +20,21 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <head>
-        {/* Google tag (gtag.js) */}
-        <script async src="https://www.googletagmanager.com/gtag/js?id=G-Z8G81VZVGZ"></script>
-        <script
-          dangerouslySetInnerHTML={{
-            __html: `
-              window.dataLayer = window.dataLayer || [];
-              function gtag(){dataLayer.push(arguments);}
-              gtag('js', new Date());
-              gtag('config', 'G-Z8G81VZVGZ');
-            `,
-          }}
+        {/* Google Analytics via next/script */}
+        <Script
+          src="https://www.googletagmanager.com/gtag/js?id=G-Z8G81VZVGZ"
+          strategy="afterInteractive"
         />
+        <Script id="gtag-init" strategy="afterInteractive">
+          {`
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            gtag('config', 'G-Z8G81VZVGZ');
+          `}
+        </Script>
       </head>
-      <body
-        className={`antialiased`}
-      >
+      <body className="antialiased">
         <ThemeProvider
           attribute="class"
           defaultTheme="system"
