@@ -53,14 +53,16 @@ const searchFormSchema = z
 
 export type SearchFormData = z.infer<typeof searchFormSchema>;
 
-// ----- Helper Functions -----
+// ----- Helper Functions & Constants -----
 const combineDateTime = (date: Date, timeString: string): Date => {
   const [timePart, period] = timeString.split(" ");
   const [hoursStr, minutesStr] = timePart.split(":");
   let hours = Number(hoursStr);
   const minutes = Number(minutesStr);
+
   if (period === "PM" && hours < 12) hours += 12;
   else if (period === "AM" && hours === 12) hours = 0;
+
   const result = new Date(date);
   result.setHours(hours, minutes);
   return result;
@@ -99,7 +101,7 @@ const DatePickerPopover: React.FC<DatePickerPopoverProps> = ({
       <Button
         variant="outline"
         className={cn(
-          "w-full justify-start text-left font-normal",
+          "w-full text-xs truncate justify-start text-left font-normal",
           error && "border-red-500",
           !value && "text-muted-foreground"
         )}
@@ -112,7 +114,9 @@ const DatePickerPopover: React.FC<DatePickerPopoverProps> = ({
       <Calendar
         mode="single"
         selected={value}
-        onSelect={(day) => day && onChange(day)}
+        onSelect={(day) => {
+          if (day) onChange(day); // Only call onChange if a valid date is returned.
+        }}
         disabled={(date) => (minDate ? date < minDate : false)}
         initialFocus
       />
@@ -128,7 +132,7 @@ type TimeSelectProps = {
 
 const TimeSelect: React.FC<TimeSelectProps> = ({ value, onChange, error }) => (
   <Select value={value} onValueChange={onChange}>
-    <SelectTrigger className={cn("w-full", error && "border-red-500")}>
+    <SelectTrigger className={cn("w-full text-xs", error && "border-red-500")}>
       <SelectValue placeholder="Select time" />
     </SelectTrigger>
     <SelectContent>
@@ -166,27 +170,50 @@ export function SearchForm() {
   const startDate = watch("startDate");
 
   const onSubmit = async (data: SearchFormData) => {
-    const parseTime = (timeStr: string) => {
+    // Helper to parse a 12-hour time string (e.g., "9:00 AM") into hour and minute values
+    function parseTime(timeStr: string) {
       const [time, modifier] = timeStr.split(" ");
-      let [h, m] = time.split(":").map(Number);
-      if (modifier === "PM" && h !== 12) h += 12;
-      if (modifier === "AM" && h === 12) h = 0;
-      return { hours: h, minutes: m };
-    };
+      const [rawHours, rawMinutes] = time.split(":").map(Number);
+      let hours = rawHours;
+      const minutes = rawMinutes;
+      if (modifier === "PM" && hours !== 12) {
+        hours += 12;
+      }
+      if (modifier === "AM" && hours === 12) {
+        hours = 0;
+      }
+      return { hours, minutes };
+    }
+    
 
-    const sd = new Date(data.startDate);
-    const ed = new Date(data.endDate);
-    const { hours: sh, minutes: sm } = parseTime(data.startTime);
-    const { hours: eh, minutes: em } = parseTime(data.endTime);
-    sd.setHours(sh, sm, 0, 0);
-    ed.setHours(eh, em, 0, 0);
+    // Clone the date objects so we don't mutate the originals
+    const startDateTime = new Date(data.startDate);
+    const endDateTime = new Date(data.endDate);
 
-    const params = new URLSearchParams({
+    // Extract hours and minutes from the time strings
+    const { hours: startHours, minutes: startMinutes } = parseTime(data.startTime);
+    const { hours: endHours, minutes: endMinutes } = parseTime(data.endTime);
+
+    // Set the time values on the date objects (seconds and milliseconds are set to 0)
+    startDateTime.setHours(startHours, startMinutes, 0, 0);
+    endDateTime.setHours(endHours, endMinutes, 0, 0);
+
+    // Now startDateTime and endDateTime are Date objects combining the separate date and time fields.
+    const formattedData = {
       searchQuery: data.searchQuery,
       zipCode: data.zipCode,
-      startDateTime: sd.toISOString(),
-      endDateTime: ed.toISOString(),
-    });
+      startDateTime, // Date object
+      endDateTime,   // Date object
+    };
+
+    console.log("Search form submitted with data:", formattedData);
+
+    // If needed for routing or query parameters, you might convert the Date objects to strings.
+    const params = new URLSearchParams();
+    params.append("searchQuery", data.searchQuery);
+    params.append("zipCode", data.zipCode);
+    params.append("startDateTime", startDateTime.toISOString());
+    params.append("endDateTime", endDateTime.toISOString());
 
     router.push(`/request-details?${params.toString()}`);
   };
@@ -257,7 +284,7 @@ export function SearchForm() {
             Start Date & Time <span className="text-red-500">*</span>
           </Label>
           <div className="flex flex-col sm:flex-row gap-4">
-            <div className="w-full sm:w-3/5 min-w-0">
+            <div className="w-full sm:w-3/5 min-w-0 overflow-hidden">
               <Controller
                 control={control}
                 name="startDate"
@@ -298,7 +325,7 @@ export function SearchForm() {
             End Date & Time <span className="text-red-500">*</span>
           </Label>
           <div className="flex flex-col sm:flex-row gap-4">
-            <div className="w-full sm:w-3/5 min-w-0">
+            <div className="w-full sm:w-3/5 min-w-0 overflow-hidden">
               <Controller
                 control={control}
                 name="endDate"
