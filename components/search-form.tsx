@@ -53,16 +53,14 @@ const searchFormSchema = z
 
 export type SearchFormData = z.infer<typeof searchFormSchema>;
 
-// ----- Helper Functions & Constants -----
+// ----- Helper Functions -----
 const combineDateTime = (date: Date, timeString: string): Date => {
   const [timePart, period] = timeString.split(" ");
   const [hoursStr, minutesStr] = timePart.split(":");
   let hours = Number(hoursStr);
   const minutes = Number(minutesStr);
-
   if (period === "PM" && hours < 12) hours += 12;
   else if (period === "AM" && hours === 12) hours = 0;
-
   const result = new Date(date);
   result.setHours(hours, minutes);
   return result;
@@ -99,25 +97,23 @@ const DatePickerPopover: React.FC<DatePickerPopoverProps> = ({
   <Popover>
     <PopoverTrigger asChild>
       <Button
+        type="button"
         variant="outline"
         className={cn(
-          "w-full justify-start text-left font-normal",
+          "w-full truncate justify-start text-left font-normal",
           error && "border-red-500",
           !value && "text-muted-foreground"
         )}
       >
-        <CalendarIcon className="mr-2 h-4 w-2" />
+        <CalendarIcon className="mr-2 h-4 w-4" />
         {value ? format(value, "PPP") : "Select date"}
-
       </Button>
     </PopoverTrigger>
-    <PopoverContent className="w-auto p-0" align="start">
+    <PopoverContent className="w-auto p-0 z-50" align="start">
       <Calendar
         mode="single"
         selected={value}
-        onSelect={(day) => {
-          if (day) onChange(day); // Only call onChange if a valid date is returned.
-        }}
+        onSelect={(day) => day && onChange(day)}
         disabled={(date) => (minDate ? date < minDate : false)}
         initialFocus
       />
@@ -133,7 +129,7 @@ type TimeSelectProps = {
 
 const TimeSelect: React.FC<TimeSelectProps> = ({ value, onChange, error }) => (
   <Select value={value} onValueChange={onChange}>
-    <SelectTrigger className={cn(error && "border-red-500")}>
+    <SelectTrigger className={cn("w-full", error && "border-red-500")}>
       <SelectValue placeholder="Select time" />
     </SelectTrigger>
     <SelectContent>
@@ -171,198 +167,179 @@ export function SearchForm() {
   const startDate = watch("startDate");
 
   const onSubmit = async (data: SearchFormData) => {
-    function parseTime(timeStr: string) {
+    const parseTime = (timeStr: string) => {
       const [time, modifier] = timeStr.split(" ");
-      const [rawHours, rawMinutes] = time.split(":").map(Number);
-      let hours = rawHours;
-      const minutes = rawMinutes;
-      if (modifier === "PM" && hours !== 12) {
-        hours += 12;
-      }
-      if (modifier === "AM" && hours === 12) {
-        hours = 0;
-      }
-      return { hours, minutes };
-    }
-
-    const startDateTime = new Date(data.startDate);
-    const endDateTime = new Date(data.endDate);
-
-    const { hours: startHours, minutes: startMinutes } = parseTime(data.startTime);
-    const { hours: endHours, minutes: endMinutes } = parseTime(data.endTime);
-
-    startDateTime.setHours(startHours, startMinutes, 0, 0);
-    endDateTime.setHours(endHours, endMinutes, 0, 0);
-
-    const formattedData = {
-      searchQuery: data.searchQuery,
-      zipCode: data.zipCode,
-      startDateTime,
-      endDateTime,
+      let [h, m] = time.split(":").map(Number);
+      if (modifier === "PM" && h !== 12) h += 12;
+      if (modifier === "AM" && h === 12) h = 0;
+      return { hours: h, minutes: m };
     };
 
-    console.log("Search form submitted with data:", formattedData);
+    const sd = new Date(data.startDate);
+    const ed = new Date(data.endDate);
+    const { hours: sh, minutes: sm } = parseTime(data.startTime);
+    const { hours: eh, minutes: em } = parseTime(data.endTime);
+    sd.setHours(sh, sm, 0, 0);
+    ed.setHours(eh, em, 0, 0);
 
-    const params = new URLSearchParams();
-    params.append("searchQuery", data.searchQuery);
-    params.append("zipCode", data.zipCode);
-    params.append("startDateTime", startDateTime.toISOString());
-    params.append("endDateTime", endDateTime.toISOString());
+    const params = new URLSearchParams({
+      searchQuery: data.searchQuery,
+      zipCode: data.zipCode,
+      startDateTime: sd.toISOString(),
+      endDateTime: ed.toISOString(),
+    });
 
     router.push(`/request-details?${params.toString()}`);
   };
 
   return (
-    <div
-      id="search-form"
-      className="p-1 max-w-fit mx-auto"
-    >
-      {/* ─── NEW HEADING ───────────────────────────────────────── */}
+    <div id="search-form" className="p-1 w-full max-w-md mx-auto px-4">
       <h2
         className="
-          text-foreground        /* light/white text               */
-          font-bold              /* bold weight                    */
-          text-lg sm:text-xl     /* responsive sizing              */
-          leading-tight          /* tighter line-height            */
-          mb-3                   /* no bottom spacing              */
+          text-foreground
+          font-bold
+          text-lg sm:text-xl
+          leading-tight
+          mb-3
         "
       >
-        FIND YOUR PERFECT<br />RENTAL
+        FIND YOUR PERFECT
+        <br />
+        RENTAL
       </h2>
-      {/* ───────────────────────────────────────────────────────── */}
 
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
         <div className="space-y-4">
-          <div className="flex flex-col gap-4">
-            {/* Search Query */}
-            <div className="relative flex-1">
-              <Label htmlFor="search" className="mb-1 block">
-                What are you looking for? <span className="text-red-500">*</span>
-              </Label>
-              <div className="relative">
-                <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                <Input
-                  id="search"
-                  placeholder="Search for products..."
-                  {...register("searchQuery")}
-                  className={cn("pl-9", errors.searchQuery && "border-red-500")}
-                  required
-                />
-              </div>
-              {errors.searchQuery && (
-                <p className="text-red-500 text-xs mt-1">
-                  {errors.searchQuery.message}
-                </p>
-              )}
-            </div>
-
-            {/* Zip Code */}
-            <div className="relative flex-1">
-              <Label htmlFor="zipcode" className="mb-1 block">
-                Zip Code <span className="text-red-500">*</span>
-              </Label>
+          {/* Search Query */}
+          <div className="relative flex-1">
+            <Label htmlFor="search" className="mb-1 block">
+              What are you looking for? <span className="text-red-500">*</span>
+            </Label>
+            <div className="relative">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
               <Input
-                id="zipcode"
-                placeholder="Enter zip code"
-                {...register("zipCode")}
-                className={errors.zipCode && "border-red-500"}
+                id="search"
+                placeholder="Search for products..."
+                {...register("searchQuery")}
+                className={cn("pl-9", errors.searchQuery && "border-red-500")}
                 required
               />
-              {errors.zipCode && (
-                <p className="text-red-500 text-xs mt-1">
-                  {errors.zipCode.message}
-                </p>
-              )}
             </div>
+            {errors.searchQuery && (
+              <p className="text-red-500 text-xs mt-1">
+                {errors.searchQuery.message}
+              </p>
+            )}
           </div>
 
-          {/* Date and Time Selection */}
-          <div className="space-y-4">
-            {/* Start Date & Time */}
-            <div>
-              <Label className="block mb-1">
-                Start Date & Time <span className="text-red-500">*</span>
-              </Label>
-              <div className="flex flex-col sm:flex-row gap-5">
-                <div className="flex-1">
-                  <Controller
-                    control={control}
-                    name="startDate"
-                    render={({ field }) => (
-                      <DatePickerPopover
-                        value={field.value}
-                        onChange={field.onChange}
-                        error={errors.startDate?.message}
-                        minDate={new Date("1900-01-01")}
-                      />
-                    )}
-                  />
-                </div>
-                <div className="w-full sm:w-[140px]">
-                  <Controller
-                    control={control}
-                    name="startTime"
-                    render={({ field }) => (
-                      <TimeSelect
-                        value={field.value}
-                        onChange={field.onChange}
-                        error={errors.startTime?.message}
-                      />
-                    )}
-                  />
-                </div>
-              </div>
-              {(errors.startDate || errors.startTime) && (
-                <p className="text-red-500 text-xs mt-1">
-                  {errors.startDate?.message || errors.startTime?.message}
-                </p>
-              )}
-            </div>
-
-            {/* End Date & Time */}
-            <div>
-              <Label className="block mb-1">
-                End Date & Time <span className="text-red-500">*</span>
-              </Label>
-              <div className="flex flex-col sm:flex-row gap-5">
-                <div className="flex-1">
-                  <Controller
-                    control={control}
-                    name="endDate"
-                    render={({ field }) => (
-                      <DatePickerPopover
-                        value={field.value}
-                        onChange={field.onChange}
-                        error={errors.endDate?.message}
-                        minDate={startDate || new Date("1900-01-01")}
-                      />
-                    )}
-                  />
-                </div>
-                <div className="w-full sm:w-[140px]">
-                  <Controller
-                    control={control}
-                    name="endTime"
-                    render={({ field }) => (
-                      <TimeSelect
-                        value={field.value}
-                        onChange={field.onChange}
-                        error={errors.endTime?.message}
-                      />
-                    )}
-                  />
-                </div>
-              </div>
-              {(errors.endDate || errors.endTime) && (
-                <p className="text-red-500 text-xs mt-1">
-                  {errors.endDate?.message || errors.endTime?.message}
-                </p>
-              )}
-            </div>
+          {/* Zip Code */}
+          <div className="relative flex-1">
+            <Label htmlFor="zipcode" className="mb-1 block">
+              Zip Code <span className="text-red-500">*</span>
+            </Label>
+            <Input
+              id="zipcode"
+              placeholder="Enter zip code"
+              {...register("zipCode")}
+              className={errors.zipCode && "border-red-500"}
+              required
+            />
+            {errors.zipCode && (
+              <p className="text-red-500 text-xs mt-1">
+                {errors.zipCode.message}
+              </p>
+            )}
           </div>
         </div>
 
-        <Button type="submit" style={{ backgroundColor: '#9dd1a8', color: '#000' }} className="w-full cursor-pointer" disabled={isSubmitting}>
+        {/* Start Date & Time */}
+        <div className="space-y-2">
+          <Label className="block mb-1">
+            Start Date & Time <span className="text-red-500">*</span>
+          </Label>
+          <div className="flex flex-col sm:flex-row gap-4">
+            <div className="w-full sm:w-3/5 min-w-0">
+              <Controller
+                control={control}
+                name="startDate"
+                render={({ field }) => (
+                  <DatePickerPopover
+                    value={field.value}
+                    onChange={field.onChange}
+                    error={errors.startDate?.message}
+                    minDate={new Date("1900-01-01")}
+                  />
+                )}
+              />
+            </div>
+            <div className="w-full sm:w-2/5 min-w-0">
+              <Controller
+                control={control}
+                name="startTime"
+                render={({ field }) => (
+                  <TimeSelect
+                    value={field.value}
+                    onChange={field.onChange}
+                    error={errors.startTime?.message}
+                  />
+                )}
+              />
+            </div>
+          </div>
+          {(errors.startDate || errors.startTime) && (
+            <p className="text-red-500 text-xs mt-1">
+              {errors.startDate?.message || errors.startTime?.message}
+            </p>
+          )}
+        </div>
+
+        {/* End Date & Time */}
+        <div className="space-y-2">
+          <Label className="block mb-1">
+            End Date & Time <span className="text-red-500">*</span>
+          </Label>
+          <div className="flex flex-col sm:flex-row gap-4">
+            <div className="w-full sm:w-3/5 min-w-0">
+              <Controller
+                control={control}
+                name="endDate"
+                render={({ field }) => (
+                  <DatePickerPopover
+                    value={field.value}
+                    onChange={field.onChange}
+                    error={errors.endDate?.message}
+                    minDate={startDate || new Date("1900-01-01")}
+                  />
+                )}
+              />
+            </div>
+            <div className="w-full sm:w-2/5 min-w-0">
+              <Controller
+                control={control}
+                name="endTime"
+                render={({ field }) => (
+                  <TimeSelect
+                    value={field.value}
+                    onChange={field.onChange}
+                    error={errors.endTime?.message}
+                  />
+                )}
+              />
+            </div>
+          </div>
+          {(errors.endDate || errors.endTime) && (
+            <p className="text-red-500 text-xs mt-1">
+              {errors.endDate?.message || errors.endTime?.message}
+            </p>
+          )}
+        </div>
+
+        <Button
+          type="submit"
+          style={{ backgroundColor: "#9dd1a8", color: "#000" }}
+          className="w-full cursor-pointer"
+          disabled={isSubmitting}
+        >
           {isSubmitting ? (
             <>
               <Loader2 className="mr-2 h-4 w-4 animate-spin" />

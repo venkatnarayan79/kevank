@@ -30,13 +30,16 @@ export function Hero() {
     Autoplay({ delay: AUTO_PLAY_DELAY, stopOnInteraction: false })
   )
 
-  useEffect(() => {
-    if (!api) return
-    const onSelect = () => setSelectedIndex(api.selectedScrollSnap())
-    api.on("select", onSelect)
-    setSelectedIndex(api.selectedScrollSnap())
-    return () => api.off("select", onSelect)
-  }, [api])
+useEffect(() => {
+  if (!api) return;
+  const onSelect = () => setSelectedIndex(api.selectedScrollSnap());
+  api.on("select", onSelect);
+  setSelectedIndex(api.selectedScrollSnap());
+  return () => {
+    api.off("select", onSelect);
+  };
+}, [api]);
+
 
   return (
     <div className="relative overflow-hidden">
@@ -48,9 +51,13 @@ export function Hero() {
         className="w-full"
       >
         {/* Slightly shorter on mobile so text + form fit */}
-        <CarouselContent className="h-[900px] md:h-[550px]">
+        <CarouselContent className="h-[930px] md:h-[550px]">
           {backgroundImages.map((img, i) => (
-            <CarouselItem key={i} className="relative h-full">
+            <CarouselItem
+              key={i}
+              className="relative h-full"
+              style={{ touchAction: 'pan-y' }}
+            >
               <div
                 className="absolute inset-0 bg-cover bg-center"
                 style={{ backgroundImage: `url(${img})` }}
@@ -91,8 +98,8 @@ export function Hero() {
         </div>
 
         {/* Mobile form */}
-        <div className="w-full px-4 md:hidden flex justify-center">
-          <div className="bg-[#0e1c11] p-5 rounded-2xl shadow-xl w-full max-w-xs sm:max-w-sm">
+        <div className="w-full px-4 md:hidden flex justify-center pointer-events-auto">
+          <div className="bg-[#0e1c11] p-5 rounded-2xl shadow-xl w-full max-w-xs sm:max-w-sm pointer-events-auto">
             <SearchForm />
           </div>
         </div>
@@ -107,7 +114,7 @@ export function Hero() {
               Access thousands of tools, appliances,<br /> and equipment in your neighborhood.<br /> Save money, reduce waste, and connect<br /> with your community.
             </p>
           </div>
-          <div className="col-start-9 col-span-3 flex justify-start">
+          <div className="col-start-9 col-span-3 flex justify-start pointer-events-auto">
             <div className="bg-[#0e1c11] p-8 rounded-2xl shadow-xl w-full">
               <SearchForm />
             </div>
