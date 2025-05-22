@@ -11,7 +11,8 @@ export default function Home() {
     <main className="min-h-screen">
       <div className="relative">
         <Hero />
-        <div className="absolute top-32 right-10 md:right-20 max-w-md z-40">
+        {/* SearchForm is now integrated directly in the Hero component */}
+        <div className="md:hidden mt-8 px-4">
           <SearchForm />
         </div>
       </div>

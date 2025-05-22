@@ -10,6 +10,7 @@ import {
   CarouselItem,
 } from "@/components/ui/carousel";
 import { Button } from "@/components/ui/button";
+import { SearchForm } from "@/components/search-form";
 
 // Configuration constants
 const AUTO_PLAY_DELAY = 5000; // Autoplay delay in milliseconds
@@ -84,7 +85,11 @@ export function Hero() {
         </div>
 
         <div className="flex items-center justify-center">
-          {/* Search box will be included separately */}
+          <div className="md:mt-8 md:mr-12 w-full max-w-md">
+            <div className="hidden md:block">
+              <SearchForm />
+            </div>
+          </div>
         </div>
       </div>
     </div>
