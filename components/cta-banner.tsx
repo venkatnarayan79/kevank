@@ -11,7 +11,7 @@ const CtaBanner: React.FC = () => {
   return (
     <section aria-label="CTA banner" className="relative w-full">
       <Image
-        src="/man-498473_1920.jpg"
+        src="/Layer_10.jpg"
         alt="Electric scooter"
         fill
         priority
