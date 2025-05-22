@@ -97,10 +97,9 @@ const DatePickerPopover: React.FC<DatePickerPopoverProps> = ({
   <Popover>
     <PopoverTrigger asChild>
       <Button
-        type="button"
         variant="outline"
         className={cn(
-          "w-full truncate justify-start text-left font-normal",
+          "w-full justify-start text-left font-normal",
           error && "border-red-500",
           !value && "text-muted-foreground"
         )}
@@ -109,7 +108,7 @@ const DatePickerPopover: React.FC<DatePickerPopoverProps> = ({
         {value ? format(value, "PPP") : "Select date"}
       </Button>
     </PopoverTrigger>
-    <PopoverContent className="w-auto p-0 z-50" align="start">
+    <PopoverContent className="w-auto p-0" align="start">
       <Calendar
         mode="single"
         selected={value}

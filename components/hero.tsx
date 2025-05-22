@@ -51,7 +51,7 @@ useEffect(() => {
         className="w-full"
       >
         {/* Slightly shorter on mobile so text + form fit */}
-        <CarouselContent className="h-[930px] md:h-[550px]">
+        <CarouselContent className="h-[990px] md:h-[550px]">
           {backgroundImages.map((img, i) => (
             <CarouselItem
               key={i}
