@@ -3,7 +3,6 @@
 import { useState } from "react"
 import Link from "next/link"
 import { Button, buttonVariants } from "@/components/ui/button"
-// import { ModeToggle } from "@/components/mode-toggle"
 import { MenuIcon, X } from "lucide-react"
 
 export function Navbar() {
@@ -13,15 +12,20 @@ export function Navbar() {
     setIsMenuOpen(!isMenuOpen)
   }
 
+  const listingBtnClass = `${buttonVariants({ variant: "ghost" })} 
+    border border-[#9dd1a8] 
+    bg-transparent 
+    hover:bg-[#9dd1a8]/10 
+    hover:border-[#9dd1a8]`
+
   return (
     <header className="border-b bg-background relative z-50">
       <div className="container mx-auto px-4">
         <div className="flex h-16 items-center justify-between">
-          <div className="flex items-center gap-2">
-            <Link href="/" className="text-2xl font-bold">
-              Kavenk
-            </Link>
-          </div>
+          {/* Logo */}
+          <Link href="/" className="text-2xl font-bold">
+            Kavenk
+          </Link>
 
           {/* Desktop Navigation */}
           <nav className="hidden md:flex items-center gap-6">
@@ -37,11 +41,10 @@ export function Navbar() {
             <Link
               href="/create-listing"
               onClick={() => setIsMenuOpen(false)}
-              className={buttonVariants({ variant: "default" })}
+              className={listingBtnClass}
             >
               Create a Listing
             </Link>
-            {/* <ModeToggle />  ← theme toggle disabled */}
           </nav>
 
           {/* Mobile Controls */}
@@ -56,7 +59,6 @@ export function Navbar() {
               {isMenuOpen ? <X className="h-6 w-6" /> : <MenuIcon className="h-6 w-6" />}
               <span className="sr-only">Toggle menu</span>
             </Button>
-            {/* <ModeToggle />  ← theme toggle disabled */}
           </div>
         </div>
       </div>
@@ -89,7 +91,7 @@ export function Navbar() {
             <Link
               href="/create-listing"
               onClick={() => setIsMenuOpen(false)}
-              className={`${buttonVariants({ variant: "ghost" })} hover:bg-[#eaebed] border border-[#9dd1a8] rounded-md hover:border-[#9dd1a8]`}
+              className={`${listingBtnClass} px-4 py-2 rounded-md`}
             >
               Create a Listing
             </Link>
@@ -97,5 +99,5 @@ export function Navbar() {
         </div>
       )}
     </header>
-  )
+)
 }
