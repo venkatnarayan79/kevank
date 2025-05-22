@@ -1,10 +1,11 @@
 "use client";
+
 import { useRouter } from "next/navigation";
 import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { addDays, format } from "date-fns";
-import { Search, Loader2, CalendarIcon } from "lucide-react";
+import { Search, CalendarIcon } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -22,7 +23,6 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import { cn } from "@/lib/utils";
 
 // ----- Schema & Types -----
 const searchFormSchema = z
@@ -32,7 +32,7 @@ const searchFormSchema = z
       .string()
       .min(1, { message: "Zip code is required" })
       .refine((val) => /^\d{5}(-\d{4})?$/.test(val), {
-        message: "Please enter a valid zip code (5 digits or 5+4 format)",
+        message: "Please enter a valid zip code",
       }),
     startDate: z.date({ required_error: "Start date is required" }),
     endDate: z.date({ required_error: "End date is required" }),
@@ -48,7 +48,7 @@ const searchFormSchema = z
     {
       message: "End date/time must be after start date/time",
       path: ["endDate"],
-    }
+    },
   );
 
 export type SearchFormData = z.infer<typeof searchFormSchema>;
@@ -82,70 +82,6 @@ const generateTimeOptions = () => {
 };
 const timeOptions = generateTimeOptions();
 
-// ----- Reusable UI Components -----
-type DatePickerPopoverProps = {
-  value: Date;
-  onChange: (value: Date) => void;
-  error?: string;
-  minDate?: Date;
-};
-
-const DatePickerPopover: React.FC<DatePickerPopoverProps> = ({
-  value,
-  onChange,
-  error,
-  minDate,
-}) => (
-  <Popover>
-    <PopoverTrigger asChild>
-      <Button
-        variant="outline"
-        className={cn(
-          "w-full justify-start text-left font-normal",
-          error && "border-red-500",
-          !value && "text-muted-foreground"
-        )}
-      >
-        <CalendarIcon className="mr-2 h-4 w-4" />
-        {value ? format(value, "PPP") : "Select date"}
-      </Button>
-    </PopoverTrigger>
-    <PopoverContent className="w-auto p-0" align="start">
-      <Calendar
-        mode="single"
-        selected={value}
-        onSelect={(day) => {
-          if (day) onChange(day); // Only call onChange if a valid date is returned.
-        }}
-        disabled={(date) => (minDate ? date < minDate : false)}
-        initialFocus
-      />
-    </PopoverContent>
-  </Popover>
-);
-
-type TimeSelectProps = {
-  value: string;
-  onChange: (value: string) => void;
-  error?: string;
-};
-
-const TimeSelect: React.FC<TimeSelectProps> = ({ value, onChange, error }) => (
-  <Select value={value} onValueChange={onChange}>
-    <SelectTrigger className={cn(error && "border-red-500")}>
-      <SelectValue placeholder="Select time" />
-    </SelectTrigger>
-    <SelectContent>
-      {timeOptions.map((time) => (
-        <SelectItem key={time} value={time}>
-          {time}
-        </SelectItem>
-      ))}
-    </SelectContent>
-  </Select>
-);
-
-// ----- Main Component -----
 export function SearchForm() {
   const router = useRouter();
 
@@ -170,7 +106,6 @@ export function SearchForm() {
   const startDate = watch("startDate");
 
   const onSubmit = async (data: SearchFormData) => {
-    // Helper to parse a 12-hour time string (e.g., "9:00 AM") into hour and minute values
     function parseTime(timeStr: string) {
       const [time, modifier] = timeStr.split(" ");
       const [rawHours, rawMinutes] = time.split(":").map(Number);
@@ -184,31 +119,18 @@ export function SearchForm() {
       }
       return { hours, minutes };
     }
-    
 
-    // Clone the date objects so we don't mutate the originals
     const startDateTime = new Date(data.startDate);
     const endDateTime = new Date(data.endDate);
 
-    // Extract hours and minutes from the time strings
-    const { hours: startHours, minutes: startMinutes } = parseTime(data.startTime);
+    const { hours: startHours, minutes: startMinutes } = parseTime(
+      data.startTime,
+    );
     const { hours: endHours, minutes: endMinutes } = parseTime(data.endTime);
 
-    // Set the time values on the date objects (seconds and milliseconds are set to 0)
     startDateTime.setHours(startHours, startMinutes, 0, 0);
     endDateTime.setHours(endHours, endMinutes, 0, 0);
 
-    // Now startDateTime and endDateTime are Date objects combining the separate date and time fields.
-    const formattedData = {
-      searchQuery: data.searchQuery,
-      zipCode: data.zipCode,
-      startDateTime, // Date object
-      endDateTime,   // Date object
-    };
-
-    console.log("Search form submitted with data:", formattedData);
-
-    // If needed for routing or query parameters, you might convert the Date objects to strings.
     const params = new URLSearchParams();
     params.append("searchQuery", data.searchQuery);
     params.append("zipCode", data.zipCode);
@@ -219,151 +141,152 @@ export function SearchForm() {
   };
 
   return (
-    <div
-      id="search-form"
-      className="bg-background rounded-lg shadow-lg p-6 max-w-fit mx-auto"
-    >
-      <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
-        <div className="space-y-4">
-          <div className="flex flex-col sm:flex-row gap-4">
-            {/* Search Query */}
-            <div className="relative flex-1">
-              <Label htmlFor="search" className="mb-1 block">
-                What are you looking for?{" "}
-                <span className="text-red-500">*</span>
-              </Label>
-              <div className="relative">
-                <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                <Input
-                  id="search"
-                  placeholder="Search for products..."
-                  {...register("searchQuery")}
-                  className={cn("pl-9", errors.searchQuery && "border-red-500")}
-                  required
-                />
-              </div>
-              {errors.searchQuery && (
-                <p className="text-red-500 text-xs mt-1">
-                  {errors.searchQuery.message}
-                </p>
-              )}
-            </div>
-
-            {/* Zip Code */}
-            <div className="w-full sm:w-[180px]">
-              <Label htmlFor="zipcode" className="mb-1 block">
-                Zip Code <span className="text-red-500">*</span>
-              </Label>
-              <Input
-                id="zipcode"
-                placeholder="Enter zip code"
-                {...register("zipCode")}
-                className={errors.zipCode && "border-red-500"}
-                required
-              />
-              {errors.zipCode && (
-                <p className="text-red-500 text-xs mt-1">
-                  {errors.zipCode.message}
-                </p>
-              )}
-            </div>
-          </div>
-
-          {/* Date and Time Selection */}
-          <div className="space-y-4">
-            {/* Start Date & Time */}
-            <div>
-              <Label className="block mb-1">
-                Start Date & Time <span className="text-red-500">*</span>
-              </Label>
-              <div className="flex flex-col sm:flex-row gap-2">
-                <div className="flex-1">
-                  <Controller
-                    control={control}
-                    name="startDate"
-                    render={({ field }) => (
-                      <DatePickerPopover
-                        value={field.value}
-                        onChange={field.onChange}
-                        error={errors.startDate?.message}
-                        minDate={new Date("1900-01-01")}
-                      />
-                    )}
-                  />
-                </div>
-                <div className="w-full sm:w-[140px]">
-                  <Controller
-                    control={control}
-                    name="startTime"
-                    render={({ field }) => (
-                      <TimeSelect
-                        value={field.value}
-                        onChange={field.onChange}
-                        error={errors.startTime?.message}
-                      />
-                    )}
-                  />
-                </div>
-              </div>
-              {(errors.startDate || errors.startTime) && (
-                <p className="text-red-500 text-xs mt-1">
-                  {errors.startDate?.message || errors.startTime?.message}
-                </p>
-              )}
-            </div>
-
-            {/* End Date & Time */}
-            <div>
-              <Label className="block mb-1">
-                End Date & Time <span className="text-red-500">*</span>
-              </Label>
-              <div className="flex flex-col sm:flex-row gap-2">
-                <div className="flex-1">
-                  <Controller
-                    control={control}
-                    name="endDate"
-                    render={({ field }) => (
-                      <DatePickerPopover
-                        value={field.value}
-                        onChange={field.onChange}
-                        error={errors.endDate?.message}
-                        minDate={startDate || new Date("1900-01-01")}
-                      />
-                    )}
-                  />
-                </div>
-                <div className="w-full sm:w-[140px]">
-                  <Controller
-                    control={control}
-                    name="endTime"
-                    render={({ field }) => (
-                      <TimeSelect
-                        value={field.value}
-                        onChange={field.onChange}
-                        error={errors.endTime?.message}
-                      />
-                    )}
-                  />
-                </div>
-              </div>
-              {(errors.endDate || errors.endTime) && (
-                <p className="text-red-500 text-xs mt-1">
-                  {errors.endDate?.message || errors.endTime?.message}
-                </p>
-              )}
-            </div>
+    <div className="bg-[#1E352D] rounded-lg p-6 max-w-md mx-auto">
+      <h2 className="text-xl font-bold text-white mb-4">
+        FIND YOUR PERFECT RENTAL
+      </h2>
+      <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+        <div>
+          <Label htmlFor="search" className="text-white text-sm mb-1 block">
+            What are you looking for?
+          </Label>
+          <div className="relative">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+            <Input
+              id="search"
+              placeholder="Search for products..."
+              {...register("searchQuery")}
+              className="pl-9 bg-white"
+            />
           </div>
         </div>
 
-        <Button type="submit" className="w-full cursor-pointer" disabled={isSubmitting}>
-          {isSubmitting ? (
-            <>
-              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-              Searching...
-            </>
-          ) : (
-            "Search Rentals"
-          )}
+        <div>
+          <Label htmlFor="zipcode" className="text-white text-sm mb-1 block">
+            Zip Code
+          </Label>
+          <Input
+            id="zipcode"
+            placeholder="Enter zip code"
+            {...register("zipCode")}
+            className="bg-white"
+          />
+        </div>
+
+        <div>
+          <Label className="text-white text-sm mb-1 block">
+            Start Date & Time
+          </Label>
+          <div className="flex flex-col space-y-2">
+            <Controller
+              control={control}
+              name="startDate"
+              render={({ field }) => (
+                <Popover>
+                  <PopoverTrigger asChild>
+                    <Button
+                      variant="outline"
+                      className="justify-start text-left font-normal bg-white w-full"
+                    >
+                      <CalendarIcon className="mr-2 h-4 w-4" />
+                      {field.value
+                        ? format(field.value, "MMM dd, yyyy")
+                        : "Select date"}
+                    </Button>
+                  </PopoverTrigger>
+                  <PopoverContent className="w-auto p-0" align="start">
+                    <Calendar
+                      mode="single"
+                      selected={field.value}
+                      onSelect={field.onChange}
+                      initialFocus
+                    />
+                  </PopoverContent>
+                </Popover>
+              )}
+            />
+
+            <Controller
+              control={control}
+              name="startTime"
+              render={({ field }) => (
+                <Select value={field.value} onValueChange={field.onChange}>
+                  <SelectTrigger className="bg-white">
+                    <SelectValue placeholder="Select time" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {timeOptions.map((time) => (
+                      <SelectItem key={time} value={time}>
+                        {time}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              )}
+            />
+          </div>
+        </div>
+
+        <div>
+          <Label className="text-white text-sm mb-1 block">
+            End Date & Time
+          </Label>
+          <div className="flex flex-col space-y-2">
+            <Controller
+              control={control}
+              name="endDate"
+              render={({ field }) => (
+                <Popover>
+                  <PopoverTrigger asChild>
+                    <Button
+                      variant="outline"
+                      className="justify-start text-left font-normal bg-white w-full"
+                    >
+                      <CalendarIcon className="mr-2 h-4 w-4" />
+                      {field.value
+                        ? format(field.value, "MMM dd, yyyy")
+                        : "Select date"}
+                    </Button>
+                  </PopoverTrigger>
+                  <PopoverContent className="w-auto p-0" align="start">
+                    <Calendar
+                      mode="single"
+                      selected={field.value}
+                      onSelect={field.onChange}
+                      disabled={(date) => date < startDate}
+                      initialFocus
+                    />
+                  </PopoverContent>
+                </Popover>
+              )}
+            />
+
+            <Controller
+              control={control}
+              name="endTime"
+              render={({ field }) => (
+                <Select value={field.value} onValueChange={field.onChange}>
+                  <SelectTrigger className="bg-white">
+                    <SelectValue placeholder="Select time" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {timeOptions.map((time) => (
+                      <SelectItem key={time} value={time}>
+                        {time}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              )}
+            />
+          </div>
+        </div>
+
+        <Button
+          type="submit"
+          className="w-full bg-[#70C27C] hover:bg-[#5BB068] text-white"
+        >
+          Search Rentals
         </Button>
       </form>
     </div>
