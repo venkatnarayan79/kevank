@@ -9,13 +9,12 @@ import {
   CarouselContent,
   CarouselItem,
 } from "@/components/ui/carousel"
-import { cn } from "@/lib/utils"
 
+import { cn } from "@/lib/utils"
 import { SearchForm } from "@/components/search-form"
 
 // Config
 const AUTO_PLAY_DELAY = 3000
-
 const backgroundImages = [
   "header1.jpg",
   "header2.jpg",
@@ -33,14 +32,10 @@ export function Hero() {
 
   useEffect(() => {
     if (!api) return
-
     const onSelect = () => setSelectedIndex(api.selectedScrollSnap())
     api.on("select", onSelect)
     setSelectedIndex(api.selectedScrollSnap())
-
-    return () => {
-      api.off("select", onSelect)
-    }
+    return () => api.off("select", onSelect)
   }, [api])
 
   return (
@@ -82,15 +77,17 @@ export function Hero() {
       </Carousel>
 
       {/* Overlay */}
-      <div className="absolute inset-0 z-40 pointer-events-none flex flex-col items-center gap-6 pt-12 md:pointer-events-none md:block md:pt-0">
+      <div className="absolute inset-0 z-40 pointer-events-none flex flex-col items-center gap-6 pt-12 md:block md:pt-0">
         {/* Mobile heading & paragraph */}
-        <div className="w-full px-5 text-center md:hidden space-y-3">
-          <h1 className="font-extrabold tracking-tight leading-snug text-3xl sm:text-4xl text-black">
-            RENT WHAT<br />YOU NEED,<br />SHARE WHAT<br />YOU DON&apos;T.
-          </h1>
-          <p className="text-[15px] sm:text-base max-w-[22rem] mx-auto text-black">
-            Access thousands of tools, appliances, and equipment in your neighborhood. Save money, reduce waste, and connect with your community.
-          </p>
+        <div className="w-full md:hidden flex justify-center px-5">
+          <div className="max-w-[22rem] space-y-3 text-left">
+            <h1 className="font-extrabold tracking-tight leading-snug text-3xl sm:text-4xl text-black">
+              RENT WHAT<br />YOU NEED,<br />SHARE WHAT<br />YOU DON&apos;T.
+            </h1>
+            <p className="text-[15px] sm:text-base text-gray-900">
+              Access thousands of tools, appliances, and equipment in your neighborhood. Save money, reduce waste, and connect with your community.
+            </p>
+          </div>
         </div>
 
         {/* Mobile form */}
@@ -103,10 +100,10 @@ export function Hero() {
         {/* Desktop grid */}
         <div className="hidden md:grid container mx-auto h-full px-4 grid-cols-12 gap-x-6 items-center pointer-events-auto">
           <div className="col-start-5 col-span-3 text-black space-y-4">
-            <h1 className="font-bold leading-tight text-[clamp(2rem,6vw,35pt)]">
+            <h1 className="font-bold leading-none text-[clamp(2rem,6vw,30pt)]">
               RENT WHAT<br />YOU NEED,<br />SHARE WHAT<br />YOU DON&apos;T.
             </h1>
-            <p className="text-base md:text-xl max-w-prose">
+            <p className="text-base md:text-l max-w-prose text-gray-900">
               Access thousands of tools, appliances,<br /> and equipment in your neighborhood.<br /> Save money, reduce waste, and connect<br /> with your community.
             </p>
           </div>
