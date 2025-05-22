@@ -1,3 +1,4 @@
+// take-home-carosel.tsx
 "use client";
 
 import React, { useCallback, useEffect, useState } from "react";
@@ -12,14 +13,14 @@ interface SlideCard {
 }
 
 const slideCards: SlideCard[] = [
-  { id: 1, name: "Bike", rent: "$10/per day", imageName: "bike-ride-6804105_1280.jpg" }, // Bike image
-  { id: 2, name: "Equipment", rent: "$20/month", imageName: "equipment-4521859_1920.jpg" }, // Washing machine image
-  { id: 3, name: "Home Essential", rent: "$10/month", imageName: "kavenk_homepage.jpg" }, // Vacuum cleaner image
-  { id: 4, name: "Lawn Care", rent: "$100/month", imageName: "lawn-care-643559_1280.jpg" }, // Fridge image
-  { id: 5, name: "Man Gear", rent: "$50/month", imageName: "man-498473_1920.jpg" }, // Study table image
-  { id: 6, name: "Camping Tent", rent: "$12/month", imageName: "tent-548022_1920.jpg" }, // Microwave oven image
-  { id: 7, name: "Vacuum Cleaner", rent: "$15/month", imageName: "vacuum-cleaner-657719_1280.jpg" }, // Scooter image
-  { id: 8, name: "Woman Gear", rent: "$10/month", imageName: "woman-6572974_1280.jpg" }, // Bike image
+  { id: 1, name: "Bike", rent: "$10/per day", imageName: "bike-ride-6804105_1280.jpg" },
+  { id: 2, name: "Equipment", rent: "$20/month", imageName: "equipment-4521859_1920.jpg" },
+  { id: 3, name: "Home Essential", rent: "$10/month", imageName: "kavenk_homepage.jpg" },
+  { id: 4, name: "Lawn Care", rent: "$100/month", imageName: "lawn-care-643559_1280.jpg" },
+  { id: 5, name: "Man Gear", rent: "$50/month", imageName: "man-498473_1920.jpg" },
+  { id: 6, name: "Camping Tent", rent: "$12/month", imageName: "tent-548022_1920.jpg" },
+  { id: 7, name: "Vacuum Cleaner", rent: "$15/month", imageName: "vacuum-cleaner-657719_1280.jpg" },
+  { id: 8, name: "Woman Gear", rent: "$10/month", imageName: "woman-6572974_1280.jpg" },
 ];
 
 const TakeHomeCarousel: React.FC = () => {
@@ -28,9 +29,9 @@ const TakeHomeCarousel: React.FC = () => {
     dragFree: true,
     align: "start",
     breakpoints: {
-      "(min-width:1024px)": { slidesToScroll: 1 }, // 3 items visible on desktop
-      "(min-width:640px) and (max-width:1023px)": { slidesToScroll: 1 }, // 2 items visible on tablets
-      "(max-width:639px)": { slidesToScroll: 1 }, // 1 item visible on mobile
+      "(min-width:1024px)": { slidesToScroll: 1 },
+      "(min-width:640px) and (max-width:1023px)": { slidesToScroll: 1 },
+      "(max-width:639px)": { slidesToScroll: 1 },
     },
   });
 
@@ -61,7 +62,7 @@ const TakeHomeCarousel: React.FC = () => {
   return (
     <section aria-label="You’ll love to take these home" className="py-20 md:py-24 bg-[#9dd1a8]">
       <div className="max-w-7xl mx-auto px-4">
-        {/* Heading + HR + Arrows */}
+        {/* Heading + Divider + Arrows */}
         <div className="mb-8 md:mb-12">
           <h2
             className="text-2xl md:text-3xl font-bold text-gray-900 text-center"
@@ -76,37 +77,21 @@ const TakeHomeCarousel: React.FC = () => {
               onClick={scrollPrev}
               disabled={!canScrollPrev}
               aria-label="Previous slide"
-              className={`
-                h-16 w-16 rounded-full bg-transparent flex items-center justify-center
-                ${canScrollPrev ? "" : "opacity-40"}
-                transition
-              `}
+              className={`h-16 w-16 rounded-full bg-transparent flex items-center justify-center transition ${
+                canScrollPrev ? "" : "opacity-40"
+              }`}
             >
-              {/* Corrected: LEFT arrow should use back.png */}
-              <Image
-                src="/back.png"
-                alt="Previous slide"
-                width={48}
-                height={48}
-              />
+              <Image src="/back.png" alt="Previous slide" width={48} height={48} />
             </button>
             <button
               onClick={scrollNext}
               disabled={!canScrollNext}
               aria-label="Next slide"
-              className={`
-                h-16 w-16 rounded-full bg-transparent flex items-center justify-center
-                ${canScrollNext ? "" : "opacity-40"}
-                transition
-              `}
+              className={`h-16 w-16 rounded-full bg-transparent flex items-center justify-center transition ${
+                canScrollNext ? "" : "opacity-40"
+              }`}
             >
-              {/* Corrected: RIGHT arrow should use front.png */}
-              <Image
-                src="/front.png"
-                alt="Next slide"
-                width={48}
-                height={48}
-              />
+              <Image src="/front.png" alt="Next slide" width={48} height={48} />
             </button>
           </div>
         </div>
@@ -117,7 +102,7 @@ const TakeHomeCarousel: React.FC = () => {
             {slideCards.map(({ id, name, rent, imageName }) => (
               <div
                 key={id}
-                className="flex flex-col w-64 md:w-72 lg:w-80 flex-shrink-0 rounded-lg border-[4px] border-[#8FD0A8] bg-white p-5"
+                className="flex flex-col flex-shrink-0 w-full sm:w-64 md:w-72 lg:w-80 rounded-lg border-[4px] border-[#8FD0A8] bg-white p-5"
               >
                 <Image
                   src={`/${imageName}`}
