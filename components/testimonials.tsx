@@ -66,8 +66,8 @@ const Testimonials: React.FC = () => {
 
   return (
     <section aria-label="Testimonials" className="py-28 bg-white">
-      <div className="max-w-[90%] mx-auto px-4 grid lg:grid-cols-[320px_1fr] gap-16">
-        <aside className="flex flex-col">
+      <div className="max-w-[90%] mx-auto px-4 grid lg:grid-cols-[600px_1fr] gap-16">
+        <aside className="flex flex-col justify-center">
           <h2 className="text-3xl font-bold text-gray-900 leading-tight">
             Over&nbsp;1.5&nbsp;lakh<br />happy&nbsp;subscribers
           </h2>
@@ -106,39 +106,41 @@ const Testimonials: React.FC = () => {
         </aside>
 
         <div className="embla overflow-hidden" ref={emblaRef}>
-          <div className="embla__container flex gap-8">
+          <div className="embla__container flex gap-20">
             {testimonials.map(({ name, avatar, message }, idx) => (
-              <article
-                key={idx}
-                className="flex-shrink-0 basis-full bg-[#9dd1a8] rounded-[20px] p-12 relative"
-              >
-                <svg
-                  viewBox="0 0 140 96"
-                  className="absolute top-6 right-6 w-28 h-20 text-[#CBD3E6] pointer-events-none select-none"
-                  aria-hidden="true"
-                >
-                  <text x="0" y="80" fontSize="120" fontWeight="700">
-                    ”
-                  </text>
-                </svg>
-                <header className="flex items-center gap-4">
-                  {avatar ? (
+            <article
+              key={idx}
+              className="flex-shrink-0 basis-[280px] md:basis-160 bg-[#9dd1a8] rounded-[20px] p-8 md:p-20 relative"
+            >
+              <div className="absolute -top-1 right-6 w-12 md:w-20 aspect-square">
+                <Image
+                  src="/inverted-comma.png"
+                  alt=""
+                  fill
+                  className="object-contain pointer-events-none select-none"
+                />
+              </div>
+              <header className="flex items-center gap-4">
+                {avatar ? (
+                  <div className="relative w-10 h-10 md:w-14 md:h-14 rounded-full overflow-hidden">
                     <Image
                       src={avatar}
                       alt={`${name} photo`}
-                      width={64}
-                      height={64}
-                      className="rounded-full object-cover"
+                      fill
+                      className="object-cover"
                     />
-                  ) : (
-                    <span className="h-16 w-16 rounded-full flex items-center justify-center bg-gray-200">
-                      <UserRound className="h-8 w-8 stroke-gray-500" aria-hidden="true" />
-                    </span>
-                  )}
-                  <h3 className="font-semibold text-gray-900">{name}</h3>
-                </header>
-                <p className="mt-8 text-gray-700 leading-7">{message}</p>
-              </article>
+                  </div>
+                ) : (
+                  <span className="h-10 w-10 md:h-14 md:w-14 rounded-full flex items-center justify-center bg-gray-200">
+                    <UserRound className="h-6 w-6 stroke-gray-500" aria-hidden="true" />
+                  </span>
+                )}
+                <h3 className="font-semibold text-gray-900">{name}</h3>
+              </header>
+              <p className="mt-8 text-gray-700 leading-7">{message}</p>
+            </article>
+
+
             ))}
           </div>
         </div>
