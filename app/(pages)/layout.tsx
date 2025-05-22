@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Script from "next/script";
+import { Montserrat } from "next/font/google";
 
 import { ThemeProvider } from "@/components/theme-provider";
 import { Navbar } from "@/components/navbar";
@@ -11,6 +12,13 @@ export const metadata: Metadata = {
   title: "Kavenk",
   description: "Rental Request App",
 };
+
+const mont = Montserrat({
+  subsets: ["latin"],
+  variable: "--font-mont",
+  weight: ["400", "700"],
+  display: "swap",
+});
 
 export default function RootLayout({
   children,
@@ -34,7 +42,7 @@ export default function RootLayout({
           `}
         </Script>
       </head>
-      <body className="antialiased">
+      <body className={`antialiased ${mont.variable}`}>
         <ThemeProvider
           attribute="class"
           defaultTheme="system"
