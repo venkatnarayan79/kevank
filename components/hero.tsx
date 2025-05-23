@@ -51,7 +51,7 @@ useEffect(() => {
         className="w-full"
       >
         {/* Slightly shorter on mobile so text + form fit */}
-        <CarouselContent className="h-[990px] md:h-[550px]">
+        <CarouselContent className="h-[900px] md:h-[550px]">
           {backgroundImages.map((img, i) => (
             <CarouselItem
               key={i}
@@ -86,14 +86,11 @@ useEffect(() => {
       {/* Overlay */}
       <div className="absolute inset-0 z-40 pointer-events-none flex flex-col items-center gap-6 pt-12 md:block md:pt-0">
         {/* Mobile heading & paragraph */}
-        <div className="w-full md:hidden flex justify-center px-5">
-          <div className="max-w-[22rem] space-y-3 text-left">
-            <h1 className="font-extrabold tracking-tight leading-snug text-3xl sm:text-4xl text-black">
+        <div className="w-full md:hidden flex justify-start px-5">
+          <div className="max-w-[22rem] space-y-1 text-left pl-4 mb-6">
+            <h1 className="font-extrabold tracking-tight leading-tight text-3xl sm:text-4xl text-black">
               RENT WHAT<br />YOU NEED,<br />SHARE WHAT<br />YOU DON&apos;T.
             </h1>
-            <p className="text-[15px] sm:text-base text-gray-900">
-              Access thousands of tools, appliances, and equipment in your neighborhood. Save money, reduce waste, and connect with your community.
-            </p>
           </div>
         </div>
 

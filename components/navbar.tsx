@@ -52,7 +52,7 @@ export function Navbar() {
             <Button
               variant="ghost"
               size="icon"
-              className="text-primary"
+              className="text-[#9dd1a8]" 
               onClick={toggleMenu}
               aria-expanded={isMenuOpen}
             >

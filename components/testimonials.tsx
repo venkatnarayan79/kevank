@@ -69,11 +69,11 @@ const Testimonials: React.FC = () => {
       <div className="max-w-[90%] mx-auto px-4 grid lg:grid-cols-[600px_1fr] gap-16">
         <aside className="flex flex-col justify-center">
           <h2 className="text-3xl font-bold text-gray-900 leading-tight">
-            Over&nbsp;1.5&nbsp;lakh<br />happy&nbsp;subscribers
+            Over&nbsp;150K<br />happy&nbsp;subscribers
           </h2>
           <div className="mt-1 h-1 w-16 bg-[#9dd1a8]" />
           <p className="mt-6 text-gray-600 max-w-xs">
-            Here’s what they have to say about their Kevank experience.
+            Hear what our customers are saying
           </p>
           <div className="mt-12 flex gap-4">
             <button
