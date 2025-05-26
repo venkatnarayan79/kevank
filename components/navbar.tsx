@@ -14,12 +14,15 @@ export function Navbar() {
 
   const listingBtnClass = `${buttonVariants({ variant: "ghost" })} 
     border border-[#9dd1a8] 
-    bg-transparent 
-    hover:bg-[#9dd1a8]/10 
-    hover:border-[#9dd1a8]`
+    bg-[#0C0E1C] 
+    hover:bg-[#0C0E1C]/90 
+    hover:border-[#9dd1a8]
+    text-[#FFFFF1]`
+
 
   return (
-    <header className="border-b bg-background relative z-50">
+    <header className="border-b relative z-50" style={{ backgroundColor: '#ffffff' }}>
+
       <div className="container mx-auto px-4">
         <div className="flex h-16 items-center justify-between">
           {/* Logo */}
@@ -52,10 +55,11 @@ export function Navbar() {
             <Button
               variant="ghost"
               size="icon"
-              className="text-[#9dd1a8]" 
+              className="bg-[#0C0E1C] text-[#FFFFF1] hover:bg-[#0C0E1C]/90" 
               onClick={toggleMenu}
               aria-expanded={isMenuOpen}
             >
+
               {isMenuOpen ? <X className="h-6 w-6" /> : <MenuIcon className="h-6 w-6" />}
               <span className="sr-only">Toggle menu</span>
             </Button>

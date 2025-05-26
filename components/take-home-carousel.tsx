@@ -121,11 +121,12 @@ const TakeHomeCarousel: React.FC = () => {
                   </div>
                   <button
                     onClick={scrollToTop}
-                    className="px-4 py-2 text-sm font-medium border border-[#8FD0A8] text-gray-800 rounded-md transition hover:bg-[#8FD0A8]/10"
+                    className="px-4 py-2 text-sm font-medium border border-[#8FD0A8] text-[#FFFFF1] bg-[#0C0E1C] rounded-md transition hover:bg-[#0C0E1C]/90"
                     type="button"
                   >
                     See More
                   </button>
+
                 </div>
               </div>
             ))}

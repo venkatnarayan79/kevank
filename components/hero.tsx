@@ -87,34 +87,39 @@ useEffect(() => {
       <div className="absolute inset-0 z-40 pointer-events-none flex flex-col items-center gap-6 pt-12 md:block md:pt-0">
         {/* Mobile heading & paragraph */}
         <div className="w-full md:hidden flex justify-start px-5">
-          <div className="max-w-[22rem] space-y-1 text-left pl-4 mb-6">
-            <h1 className="font-extrabold tracking-tight leading-tight text-3xl sm:text-4xl text-black">
+          <div className="max-w-[22rem] space-y-1 text-left pl-4 mb-6" style={{ color: '#FFFFF1' }}>
+            <h1 className="font-extrabold tracking-tight leading-tight text-3xl sm:text-4xl">
               RENT WHAT<br />YOU NEED,<br />SHARE WHAT<br />YOU DON&apos;T.
             </h1>
+
           </div>
         </div>
 
         {/* Mobile form */}
         <div className="w-full px-4 md:hidden flex justify-center pointer-events-auto">
-          <div className="bg-[#0e1c11] p-5 rounded-2xl shadow-xl w-full max-w-xs sm:max-w-sm pointer-events-auto">
+          <div className="p-5 rounded-2xl shadow-xl w-full max-w-xs sm:max-w-sm pointer-events-auto" style={{ backgroundColor: '#FDDB32' }}>
             <SearchForm />
           </div>
+
         </div>
+
 
         {/* Desktop grid */}
         <div className="hidden md:grid container mx-auto h-full px-4 grid-cols-12 gap-x-6 items-center pointer-events-auto">
-          <div className="col-start-5 col-span-3 text-black space-y-4">
+          <div className="col-start-5 col-span-3 space-y-4" style={{ color: '#FFFFF1' }}>
             <h1 className="font-bold leading-none text-[clamp(2rem,6vw,30pt)]">
               RENT WHAT<br />YOU NEED,<br />SHARE WHAT<br />YOU DON&apos;T.
             </h1>
-            <p className="text-base md:text-l max-w-prose text-gray-900">
+            <p className="text-base md:text-l max-w-prose">
               Access thousands of tools, appliances,<br /> and equipment in your neighborhood.<br /> Save money, reduce waste, and connect<br /> with your community.
             </p>
+
           </div>
           <div className="col-start-9 col-span-3 flex justify-start pointer-events-auto">
-            <div className="bg-[#0e1c11] p-8 rounded-2xl shadow-xl w-full">
-              <SearchForm />
-            </div>
+          <div className="p-8 rounded-2xl shadow-xl w-full" style={{ backgroundColor: '#FDDB32' }}>
+            <SearchForm />
+          </div>
+
           </div>
         </div>
       </div>

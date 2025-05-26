@@ -26,7 +26,7 @@ const CtaBanner: React.FC = () => {
       <div className="relative z-10 flex flex-col sm:flex-row justify-center items-center gap-8 sm:gap-12 py-16 sm:py-28 px-0 mx-auto max-w-6xl">
         <Link
           href="#hero"
-          className="flex flex-col items-center justify-center w-[240px] h-[168px] sm:w-[484px] sm:h-[338px] rounded-xl bg-[#00170A] text-white hover:scale-105 transition-transform duration-200"
+          className="flex flex-col items-center justify-center w-[240px] h-[168px] sm:w-[484px] sm:h-[338px] rounded-xl bg-[#0C0E1C] text-[#FFFFF1] hover:scale-105 transition-transform duration-200"
         >
           <Image
             src="/deal.png"
@@ -43,7 +43,7 @@ const CtaBanner: React.FC = () => {
 
         <Link
           href="/create-listing"
-          className="flex flex-col items-center justify-center w-[240px] h-[168px] sm:w-[484px] sm:h-[338px] rounded-xl bg-[#00170A] text-white hover:scale-105 transition-transform duration-200"
+          className="flex flex-col items-center justify-center w-[240px] h-[168px] sm:w-[484px] sm:h-[338px] rounded-xl bg-[#0C0E1C] text-[#FFFFF1] hover:scale-105 transition-transform duration-200"
         >
           <Image
             src="/feature.png"
@@ -57,6 +57,7 @@ const CtaBanner: React.FC = () => {
             List Your Product
           </span>
         </Link>
+
       </div>
     </section>
   );

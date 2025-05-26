@@ -26,56 +26,59 @@ const HowItWorks: React.FC = () => {
         {/* Scroll-to-top card */}
         <div
           onClick={scrollToTop}
-          className="cursor-pointer flex flex-col items-center text-center rounded-lg border border-[#8FD0A8] p-6 sm:p-8 hover:shadow-lg transition"
+          className="cursor-pointer flex flex-col items-center text-center rounded-lg border border-[#8FD0A8] p-6 sm:p-8 hover:shadow-lg transition bg-[#0C0E1C]"
         >
           <Search
             className="h-10 w-10 sm:h-12 sm:w-12 stroke-[#8FD0A8]"
             aria-hidden="true"
           />
-          <h3 className="mt-4 text-base sm:text-lg font-semibold text-gray-900">
+          <h3 className="mt-4 text-base sm:text-lg font-semibold text-[#FFFFF1]">
             Find What You Need
           </h3>
-          <p className="mt-2 text-sm text-gray-600">
+          <p className="mt-2 text-sm text-[#FFFFF1]">
             Browse thousands of items by category, price, and location to find
             exactly what you’re looking for.
           </p>
         </div>
 
+
         {/* Link to /create-listing */}
         <Link
           href="/create-listing"
-          className="flex flex-col items-center text-center rounded-lg border border-[#8FD0A8] p-6 sm:p-8 hover:shadow-lg transition"
+          className="flex flex-col items-center text-center rounded-lg border border-[#8FD0A8] p-6 sm:p-8 hover:shadow-lg transition bg-[#0C0E1C]"
         >
           <CalendarClock
             className="h-10 w-10 sm:h-12 sm:w-12 stroke-[#8FD0A8]"
             aria-hidden="true"
           />
-          <h3 className="mt-4 text-base sm:text-lg font-semibold text-gray-900">
+          <h3 className="mt-4 text-base sm:text-lg font-semibold text-[#FFFFF1]">
             Book Your Rental
           </h3>
-          <p className="mt-2 text-sm text-gray-600">
+          <p className="mt-2 text-sm text-[#FFFFF1]">
             Select your rental dates, message the owner with any questions, and
             book securely through our platform.
           </p>
         </Link>
 
+
         {/* Scroll-to-top card */}
         <div
           onClick={scrollToTop}
-          className="cursor-pointer flex flex-col items-center text-center rounded-lg border border-[#8FD0A8] p-6 sm:p-8 hover:shadow-lg transition"
+          className="cursor-pointer flex flex-col items-center text-center rounded-lg border border-[#8FD0A8] p-6 sm:p-8 hover:shadow-lg transition bg-[#0C0E1C]"
         >
           <DollarSign
             className="h-10 w-10 sm:h-12 sm:w-12 stroke-[#8FD0A8]"
             aria-hidden="true"
           />
-          <h3 className="mt-4 text-base sm:text-lg font-semibold text-gray-900">
+          <h3 className="mt-4 text-base sm:text-lg font-semibold text-[#FFFFF1]">
             Save Money
           </h3>
-          <p className="mt-2 text-sm text-gray-600">
+          <p className="mt-2 text-sm text-[#FFFFF1]">
             Bring big-ticket items home easily & affordably by renting from
             your neighbors.
           </p>
         </div>
+
       </div>
     </section>
   );

@@ -82,7 +82,7 @@ const Testimonials: React.FC = () => {
               aria-label="Previous testimonial"
               className={
                 `
-                h-16 w-16 rounded-full bg-transparent flex items-center justify-center
+                h-16 w-16 rounded-full bg-[#0C0E1C] flex items-center justify-center
                 ${canScrollPrev ? "" : "opacity-40"}
                 transition
               `}
@@ -95,13 +95,14 @@ const Testimonials: React.FC = () => {
               aria-label="Next testimonial"
               className={
                 `
-                h-16 w-16 rounded-full bg-transparent flex items-center justify-center
+                h-16 w-16 rounded-full bg-[#0C0E1C] flex items-center justify-center
                 ${canScrollNext ? "" : "opacity-40"}
                 transition
               `}
             >
               <Image src="/front.png" alt="Next" width={48} height={48} />
             </button>
+
           </div>
         </aside>
 

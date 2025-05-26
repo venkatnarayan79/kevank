@@ -39,17 +39,18 @@ const CategoryGrid: React.FC = () => {
                 aspect-[287/100]        /* preserve ratio */
                 flex flex-col items-center justify-center
                 border border-black     /* black border */
-                rounded-lg p-4 bg-white
+                rounded-lg p-4 bg-[#0C0E1C]
                 transition duration-300
                 lg:scale-[1.02]         /* 2% larger on desktop */
                 hover:scale-105 hover:shadow-lg
               "
             >
               <Image src={imageSrc} alt={alt} width={40} height={40} className="object-contain" />
-              <span className="mt-2 text-sm font-medium text-gray-800 text-center leading-tight line-clamp-2 h-[2.5rem]">
+              <span className="mt-2 text-sm font-medium text-[#FFFFF1] text-center leading-tight line-clamp-2 h-[2.5rem]">
                 {name}
               </span>
             </button>
+
           ))}
         </div>
       </div>
