@@ -1,3 +1,4 @@
+
 @import "tailwindcss";
 
 @plugin "tailwindcss-animate";
@@ -5,8 +6,8 @@
 @custom-variant dark (&:is(.dark *));
 
 :root {
-  --background: oklch(0.2683 0.0279 150.77);
-  --foreground: oklch(1 0 0);
+  --background: oklch(1.00 0 0);
+  --foreground: oklch(0.32 0 0);
   --card: oklch(1.00 0 0);
   --card-foreground: oklch(0.32 0 0);
   --popover: oklch(1.00 0 0);
@@ -16,7 +17,7 @@
   --secondary: oklch(0.97 0.00 264.54);
   --secondary-foreground: oklch(0.45 0.03 256.80);
   --muted: oklch(0.98 0.00 247.84);
-  --muted-foreground: oklch(1 0 0);
+  --muted-foreground: oklch(0.55 0.02 264.36);
   --accent: oklch(0.95 0.03 236.82);
   --accent-foreground: oklch(0.38 0.14 265.52);
   --destructive: oklch(0.64 0.21 25.33);
@@ -98,6 +99,48 @@
   --shadow-2xl: 0 1px 3px 0px hsl(0 0% 0% / 0.25);
 }
 
+/* Homepage-specific theme override class */
+.homepage-theme {
+  /* Override root variables only for homepage */
+  --background: oklch(1 0 0);
+  --foreground: oklch(0.32 0 0);
+  --card: oklch(1.00 0 0);
+  --card-foreground: oklch(0.32 0 0);
+  --popover: oklch(1.00 0 0);
+  --popover-foreground: oklch(0.32 0 0);
+  --primary: oklch(0.62 0.19 259.81);
+  --primary-foreground: oklch(1.00 0 0);
+  --secondary: oklch(0.97 0.00 264.54);
+  --secondary-foreground: oklch(0.45 0.03 256.80);
+  --muted: oklch(0.98 0.00 247.84);
+  --muted-foreground: oklch(0.55 0.02 264.36);
+  --accent: oklch(0.95 0.03 236.82);
+  --accent-foreground: oklch(0.38 0.14 265.52);
+  --destructive: oklch(0.64 0.21 25.33);
+  --destructive-foreground: oklch(1.00 0 0);
+  --border: oklch(0.93 0.01 264.53);
+  --input: oklch(0.93 0.01 264.53);
+  --ring: oklch(0.62 0.19 259.81);
+  /* Home page specific theme variables */
+  --hero-dot-active: oklch(0.75 0.15 140);
+  --hero-dot-inactive: oklch(0.15 0.05 140);
+  --hero-form-bg: oklch(0.12 0.05 140);
+  --hero-text: oklch(0 0 0);
+  --hero-text-secondary: oklch(0.2 0 0);
+  --category-accent: oklch(0.75 0.15 140);
+  --category-border: oklch(0 0 0);
+  --category-text: oklch(0.15 0 0);
+  --category-text-secondary: oklch(0.25 0 0);
+  --carousel-bg: oklch(0.75 0.15 140);
+  --carousel-border: oklch(0.7 0.12 140);
+  --carousel-text: oklch(0.15 0 0);
+  --carousel-text-secondary: oklch(0.4 0 0);
+  --carousel-divider: oklch(1 0 0);
+  --footer-border: oklch(0.65 0.1 140);
+  --footer-background: oklch(0.9623 0.0069 247.9);
+  --footer-social-bg: oklch(0.65 0.1 140);
+}
+
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
@@ -131,7 +174,27 @@
   --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-ring: var(--sidebar-ring);
-
+  /* Home page hero theme colors */
+  --color-hero-dot-active: var(--hero-dot-active);
+  --color-hero-dot-inactive: var(--hero-dot-inactive);
+  --color-hero-form-bg: var(--hero-form-bg);
+  --color-hero-text: var(--hero-text);
+  --color-hero-text-secondary: var(--hero-text-secondary);
+  /* Home page category theme colors */
+  --color-category-accent: var(--category-accent);
+  --color-category-border: var(--category-border);
+  --color-category-text: var(--category-text);
+  --color-category-text-secondary: var(--category-text-secondary);
+  /* Home page carousel theme colors */
+  --color-carousel-bg: var(--carousel-bg);
+  --color-carousel-border: var(--carousel-border);
+  --color-carousel-text: var(--carousel-text);
+  --color-carousel-text-secondary: var(--carousel-text-secondary);
+  --color-carousel-divider: var(--carousel-divider);
+  /* Footer theme colors */
+  --color-footer-border: var(--footer-border);
+  --color-footer-background: var(--footer-background);
+  --color-footer-social-bg: var(--footer-social-bg);
   --font-sans: var(--font-sans);
   --font-mono: var(--font-mono);
   --font-serif: var(--font-serif);

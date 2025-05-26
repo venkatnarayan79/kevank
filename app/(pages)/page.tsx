@@ -9,7 +9,7 @@ import Testimonials from "@/components/testimonials";
 export default function Home() {
 
   return (
-    <main className="min-h-screen">
+    <main className="min-h-screen homepage-theme">
       <Hero />
       <CategoryGrid />
       <TakeHomeCarousel />
