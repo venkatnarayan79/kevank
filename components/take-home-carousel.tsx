@@ -60,18 +60,22 @@ const TakeHomeCarousel: React.FC = () => {
   };
 
   return (
-    <section aria-label="You’ll love to take these home" className="py-20 md:py-24 bg-[#9dd1a8]">
+    <section aria-label="You’ll love to take these home" className="py-20 md:py-24 bg-[#FDDB32]">
+
+
+
+
       <div className="max-w-7xl mx-auto px-4">
         {/* Heading + Divider + Arrows */}
         <div className="mb-8 md:mb-12">
           <h2
-            className="text-2xl md:text-3xl font-bold text-gray-900 text-center"
+            className="text-2xl md:text-3xl font-bold text-[#191E3B] text-center"
             style={{ fontFamily: "Montserrat, sans-serif" }}
           >
             You’ll love to<br />
             take these home
           </h2>
-          <hr className="border-t-2 border-white w-24 mx-auto mt-3" />
+          <hr className="border-t-2 border-[#FDDB32] w-24 mx-auto mt-3" />
           <div className="mt-4 flex justify-end gap-2">
             <button
               onClick={scrollPrev}
@@ -102,8 +106,10 @@ const TakeHomeCarousel: React.FC = () => {
             {slideCards.map(({ id, name, rent, imageName }) => (
               <div
                 key={id}
-                className="flex flex-col flex-shrink-0 w-full sm:w-64 md:w-72 lg:w-80 rounded-lg border-[4px] border-[#8FD0A8] bg-white p-5"
+                className="flex flex-col flex-shrink-0 w-full sm:w-64 md:w-72 lg:w-80 rounded-lg bg-[#0C0E1C] p-5"
               >
+
+
                 <Image
                   src={`/${imageName}`}
                   width={320}
@@ -111,17 +117,19 @@ const TakeHomeCarousel: React.FC = () => {
                   alt={name}
                   className="aspect-square object-cover rounded"
                 />
-                <span className="mt-4 font-semibold text-gray-900 leading-snug line-clamp-2">
+                <span className="mt-4 font-semibold text-[#FFFFF1] leading-snug line-clamp-2">
                   {name}
                 </span>
                 <div className="mt-3 flex items-center justify-between">
                   <div>
-                    <span className="text-sm text-gray-500 block">Rent</span>
-                    <span className="text-lg font-semibold text-gray-900">{rent}</span>
+                    <span className="text-sm text-[#FFFFF1] block">Rent</span>
+                    <span className="text-lg font-semibold text-[#FFFFF1]">{rent}</span>
                   </div>
+
+
                   <button
                     onClick={scrollToTop}
-                    className="px-4 py-2 text-sm font-medium border border-[#8FD0A8] text-[#FFFFF1] bg-[#0C0E1C] rounded-md transition hover:bg-[#0C0E1C]/90"
+                    className="px-4 py-2 text-sm font-medium text-[#0C0E1C] bg-[#FDDB32] rounded-md transition hover:bg-[#FDDB32]/90"
                     type="button"
                   >
                     See More

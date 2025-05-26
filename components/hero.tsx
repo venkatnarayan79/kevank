@@ -74,9 +74,10 @@ useEffect(() => {
               className={cn(
                 "rounded-full transition-all",
                 selectedIndex === i
-                  ? "bg-[#9dd1a8] w-7 h-2"
+                  ? "bg-[#FDDB32] w-7 h-2"
                   : "bg-[#1c2a1f] w-2 h-2 hover:bg-[#1c2a1f]/80"
               )}
+
               aria-current={selectedIndex === i}
             />
           ))}

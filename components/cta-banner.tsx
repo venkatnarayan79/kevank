@@ -5,8 +5,8 @@ import Image from "next/image";
 import Link from "next/link";
 
 const CtaBanner: React.FC = () => {
-  const tintFilter =
-    "brightness(0) saturate(100%) invert(78%) sepia(25%) saturate(300%) hue-rotate(95deg)";
+  const tintFilter = "brightness(0) saturate(100%) invert(100%)"; // Adjusted to make icons white
+
 
   return (
     <section
@@ -21,7 +21,8 @@ const CtaBanner: React.FC = () => {
         className="object-cover object-bottom"
       />
 
-      <div className="absolute inset-0 bg-[#9DD1A8]/70 dark:bg-[#05230F]/80 backdrop-brightness-90" />
+      <div className="absolute inset-0 bg-[#FDDB32]/70 dark:bg-[#FDDB32]/50 backdrop-brightness-90" />
+
 
       <div className="relative z-10 flex flex-col sm:flex-row justify-center items-center gap-8 sm:gap-12 py-16 sm:py-28 px-0 mx-auto max-w-6xl">
         <Link

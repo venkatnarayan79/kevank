@@ -65,16 +65,21 @@ const Testimonials: React.FC = () => {
   const handleNext = useCallback(() => emblaApi?.scrollNext(), [emblaApi]);
 
   return (
-    <section aria-label="Testimonials" className="py-28 bg-white">
+    <section aria-label="Testimonials" className="py-28 bg-[#FFFFFF]">
+
+
+
       <div className="max-w-[90%] mx-auto px-4 grid lg:grid-cols-[600px_1fr] gap-16">
         <aside className="flex flex-col justify-center">
-          <h2 className="text-3xl font-bold text-gray-900 leading-tight">
+          <h2 className="text-3xl font-bold text-[#0C0E1C] leading-tight">
             Over&nbsp;150K<br />happy&nbsp;subscribers
           </h2>
-          <div className="mt-1 h-1 w-16 bg-[#9dd1a8]" />
-          <p className="mt-6 text-gray-600 max-w-xs">
-            Hear what our customers are saying
+          <div className="mt-1 h-1 w-16 bg-[#FDDB32]" />
+
+          <p className="mt-6 text-[#0C0E1C] max-w-xs">
+            Hear what our customers are saying
           </p>
+
           <div className="mt-12 flex gap-4">
             <button
               onClick={handlePrev}
@@ -82,7 +87,7 @@ const Testimonials: React.FC = () => {
               aria-label="Previous testimonial"
               className={
                 `
-                h-16 w-16 rounded-full bg-[#0C0E1C] flex items-center justify-center
+                h-16 w-16 flex items-center justify-center
                 ${canScrollPrev ? "" : "opacity-40"}
                 transition
               `}
@@ -95,13 +100,14 @@ const Testimonials: React.FC = () => {
               aria-label="Next testimonial"
               className={
                 `
-                h-16 w-16 rounded-full bg-[#0C0E1C] flex items-center justify-center
+                h-16 w-16 flex items-center justify-center
                 ${canScrollNext ? "" : "opacity-40"}
                 transition
               `}
             >
               <Image src="/front.png" alt="Next" width={48} height={48} />
             </button>
+
 
           </div>
         </aside>
@@ -111,8 +117,10 @@ const Testimonials: React.FC = () => {
             {testimonials.map(({ name, avatar, message }, idx) => (
             <article
               key={idx}
-              className="flex-shrink-0 basis-[280px] md:basis-160 bg-[#9dd1a8] rounded-[20px] p-8 md:p-20 relative"
+              className="flex-shrink-0 basis-[280px] md:basis-160 bg-[#FDDB32] rounded-[20px] p-8 md:p-20 relative"
             >
+
+
               <div className="absolute -top-1 right-6 w-12 md:w-20 aspect-square">
                 <Image
                   src="/inverted-comma.png"
@@ -136,9 +144,13 @@ const Testimonials: React.FC = () => {
                     <UserRound className="h-6 w-6 stroke-gray-500" aria-hidden="true" />
                   </span>
                 )}
-                <h3 className="font-semibold text-gray-900">{name}</h3>
+                <h3 className="font-semibold text-[#0C0E1C]">{name}</h3>
+
+
               </header>
-              <p className="mt-8 text-gray-700 leading-7">{message}</p>
+              <p className="mt-8 text-[#0C0E1C] leading-7">{message}</p>
+
+
             </article>
 
 
