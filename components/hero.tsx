@@ -89,11 +89,18 @@ useEffect(() => {
         <div className="w-full md:hidden flex justify-center px-5">
           <div className="max-w-[22rem] space-y-3 text-left">
             <h1 className="font-extrabold tracking-tight leading-snug text-3xl sm:text-4xl text-black">
-              RENT WHAT<br />YOU NEED,<br />SHARE WHAT<br />YOU DON&apos;T.
+              RENT FROM THOUSANDS<br />OF APPLIANCES AND<br />EQUIPMENT IN YOUR<br />NEIGHBORHOOD
             </h1>
+
+
+
+
             <p className="text-[15px] sm:text-base text-gray-900">
-              Access thousands of tools, appliances, and equipment in your neighborhood. Save money, reduce waste, and connect with your community.
+              Rent what you need, share what you don't
             </p>
+
+
+
           </div>
         </div>
 
@@ -106,13 +113,20 @@ useEffect(() => {
 
         {/* Desktop grid */}
         <div className="hidden md:grid container mx-auto h-full px-4 grid-cols-12 gap-x-6 items-center pointer-events-auto">
-          <div className="col-start-5 col-span-3 text-black space-y-4">
+          <div className="col-start-4 col-span-5 text-black space-y-4">
             <h1 className="font-bold leading-none text-[clamp(2rem,6vw,30pt)]">
-              RENT WHAT<br />YOU NEED,<br />SHARE WHAT<br />YOU DON&apos;T.
+              RENT FROM<br />THOUSANDS OF<br />APPLIANCES AND<br />EQUIPMENT IN YOUR NEIGHBORHOOD
             </h1>
+
+
+
+
             <p className="text-base md:text-l max-w-prose text-gray-900">
-              Access thousands of tools, appliances,<br /> and equipment in your neighborhood.<br /> Save money, reduce waste, and connect<br /> with your community.
+              Rent what you need, share what you don't
             </p>
+
+
+
           </div>
           <div className="col-start-9 col-span-3 flex justify-start pointer-events-auto">
             <div className="bg-[#0e1c11] p-8 rounded-2xl shadow-xl w-full">
