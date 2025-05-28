@@ -409,7 +409,7 @@ export function SearchForm(): React.ReactElement {
                 control={control}
                 render={({ field }) => (
                   <DatePickerPopover
-                    value={field.value}
+                    value={field.value ?? null}
                     onChange={field.onChange}
                     placeholder="No end date"
                     error={errors.endDate?.message}
