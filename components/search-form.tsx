@@ -1,10 +1,12 @@
 "use client";
-import { useRouter } from "next/navigation";
+
+import React from "react";
 import { useForm, Controller } from "react-hook-form";
+import { useRouter } from "next/navigation";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
-import { addDays, format } from "date-fns";
-import { Search, Loader2, CalendarIcon } from "lucide-react";
+import { format, isValid } from "date-fns";
+import { CalendarIcon, Loader2, Search } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -19,31 +21,107 @@ import {
 } from "@/components/ui/select";
 import {
   Popover,
-  PopoverContent,
   PopoverTrigger,
+  PopoverContent,
 } from "@/components/ui/popover";
 import { cn } from "@/lib/utils";
 
-// ----- Schema & Types -----
-const searchFormSchema = z
+/* -------------------------------------------------------
+   HELPER: Format a Date into "hh:mm AM/PM" form
+---------------------------------------------------------*/
+function formatTimeIn12Hour(date: Date): string {
+  let hours = date.getHours();
+  const minutes = date.getMinutes();
+  let period = "AM";
+
+  if (hours === 0) {
+    hours = 12; // 12 AM
+  } else if (hours === 12) {
+    period = "PM"; // 12 PM
+  } else if (hours > 12) {
+    hours -= 12;
+    period = "PM";
+  }
+
+  const minutesStr = String(minutes).padStart(2, "0");
+  return `${hours}:${minutesStr} ${period}`;
+}
+
+/* -------------------------------------------------------
+   HELPER: Combine date + "hh:mm AM/PM" into a single Date
+---------------------------------------------------------*/
+function combineDateTime(date: Date | null, timeStr: string): Date | null {
+  if (!date || !isValid(date) || !timeStr) {
+    return date;
+  }
+
+  const [timePart, ampm] = timeStr.split(" ");
+  if (!timePart || !ampm) {
+    return date;
+  }
+
+  const [hrsStr, minsStr] = timePart.split(":");
+  if (!hrsStr || !minsStr) {
+    return date;
+  }
+
+  let hours = parseInt(hrsStr);
+  const minutes = parseInt(minsStr);
+  if (ampm === "PM" && hours < 12) hours += 12;
+  if (ampm === "AM" && hours === 12) hours = 0;
+
+  const newDate = new Date(date);
+  newDate.setHours(hours, minutes, 0, 0);
+  return newDate;
+}
+
+/* -------------------------------------------------------
+   HELPER: Generate time options in 30-min increments,
+           plus an empty string for "no selection".
+---------------------------------------------------------*/
+function generateTimeOptions(): string[] {
+  const options: string[] = [""];
+  for (let hour = 0; hour < 24; hour++) {
+    for (let minute = 0; minute < 60; minute += 30) {
+      const period = hour < 12 ? "AM" : "PM";
+      const displayHour = hour % 12 === 0 ? 12 : hour % 12;
+      const minutesStr = String(minute).padStart(2, "0");
+      options.push(`${displayHour}:${minutesStr} ${period}`);
+    }
+  }
+  return options;
+}
+
+/* -------------------------------------------------------
+   SCHEMA & TYPES
+---------------------------------------------------------*/
+const formSchema = z
   .object({
-    searchQuery: z.string().min(1, { message: "Search query is required" }),
+    searchQuery: z
+      .string()
+      .min(1, "Search query is required"),
     zipCode: z
       .string()
-      .min(1, { message: "Zip code is required" })
-      .refine((val) => /^\d{5}(-\d{4})?$/.test(val), {
-        message: "Please enter a valid zip code (5 digits or 5+4 format)",
-      }),
+      .min(1, "Zip code is required")
+      .regex(/^\d{5}(-\d{4})?$/, "Invalid zip code"),
     startDate: z.date({ required_error: "Start date is required" }),
-    endDate: z.date({ required_error: "End date is required" }),
     startTime: z.string({ required_error: "Start time is required" }),
-    endTime: z.string({ required_error: "End time is required" }),
+    endDate: z.date().nullable().optional(),
+    endTime: z.string().optional(),
   })
   .refine(
     (data) => {
-      const startDateTime = combineDateTime(data.startDate, data.startTime);
-      const endDateTime = combineDateTime(data.endDate, data.endTime);
-      return endDateTime > startDateTime;
+      const { startDate, startTime, endDate, endTime } = data;
+      // Only check "end must be after start" if user picks both endDate + endTime
+      if (!endDate || !endTime) {
+        return true;
+      }
+      const sdt = combineDateTime(startDate, startTime);
+      const edt = combineDateTime(endDate, endTime);
+      if (!sdt || !edt) {
+        return true;
+      }
+      return edt > sdt;
     },
     {
       message: "End date/time must be after start date/time",
@@ -51,103 +129,118 @@ const searchFormSchema = z
     }
   );
 
-export type SearchFormData = z.infer<typeof searchFormSchema>;
+export type SearchFormData = z.infer<typeof formSchema>;
 
-// ----- Helper Functions & Constants -----
-const combineDateTime = (date: Date, timeString: string): Date => {
-  const [timePart, period] = timeString.split(" ");
-  const [hoursStr, minutesStr] = timePart.split(":");
-  let hours = Number(hoursStr);
-  const minutes = Number(minutesStr);
-
-  if (period === "PM" && hours < 12) hours += 12;
-  else if (period === "AM" && hours === 12) hours = 0;
-
-  const result = new Date(date);
-  result.setHours(hours, minutes);
-  return result;
-};
-
-const generateTimeOptions = () => {
-  const options: string[] = [];
-  for (let hour = 0; hour < 24; hour++) {
-    for (let minute = 0; minute < 60; minute += 30) {
-      const period = hour < 12 ? "AM" : "PM";
-      const displayHour = hour % 12 === 0 ? 12 : hour % 12;
-      const formattedMinute = minute.toString().padStart(2, "0");
-      options.push(`${displayHour}:${formattedMinute} ${period}`);
-    }
-  }
-  return options;
-};
-const timeOptions = generateTimeOptions();
-
-// ----- Reusable UI Components -----
-type DatePickerPopoverProps = {
-  value: Date;
-  onChange: (value: Date) => void;
+/* -------------------------------------------------------
+   DATE PICKER
+---------------------------------------------------------*/
+interface DatePickerPopoverProps {
+  value: Date | null;
+  onChange: (val: Date | null) => void;
   error?: string;
+  placeholder?: string;
   minDate?: Date;
-};
+}
 
-const DatePickerPopover: React.FC<DatePickerPopoverProps> = ({
-  value,
-  onChange,
-  error,
-  minDate,
-}) => (
-  <Popover>
-    <PopoverTrigger asChild>
-      <Button
-        variant="outline"
-        className={cn(
-          "w-full text-xs truncate justify-start text-left font-normal",
-          error && "border-red-500",
-          !value && "text-muted-foreground"
-        )}
-        style={{ borderColor: '#191E3B', backgroundColor: '#FDDB32', color: '#564A0B' }}
-      >
-        <CalendarIcon className="mr-2 h-4 w-4" />
-        {value ? format(value, "PPP") : "Select date"}
-      </Button>
-    </PopoverTrigger>
-    <PopoverContent className="w-auto p-0" align="start">
-      <Calendar
-        mode="single"
-        selected={value}
-        onSelect={(day) => {
-          if (day) onChange(day); // Only call onChange if a valid date is returned.
-        }}
-        disabled={(date) => (minDate ? date < minDate : false)}
-        initialFocus
-      />
-    </PopoverContent>
-  </Popover>
-);
+function DatePickerPopover(props: DatePickerPopoverProps) {
+  const {
+    value,
+    onChange,
+    error,
+    placeholder = "Select date",
+    minDate,
+  } = props;
 
-type TimeSelectProps = {
-  value: string;
-  onChange: (value: string) => void;
+  return (
+    <Popover>
+      <PopoverTrigger asChild>
+        <Button
+          variant="outline"
+          className={cn(
+            "w-full text-xs truncate justify-start text-left font-normal",
+            error && "border-red-500",
+            !value && "text-muted-foreground"
+          )}
+          style={{
+            borderColor: "#191E3B",
+            backgroundColor: "#FDDB32",
+            color: "#564A0B",
+          }}
+        >
+          <CalendarIcon className="mr-2 h-4 w-4" />
+          {value ? format(value, "PPP") : placeholder}
+        </Button>
+      </PopoverTrigger>
+      <PopoverContent className="w-auto p-0" align="start">
+        <Calendar
+          mode="single"
+          showOutsideDays
+          selected={value ?? undefined}
+          disabled={(dayToCheck) => {
+            if (minDate && dayToCheck < minDate) return true;
+            return false;
+          }}
+          onDayClick={(selectedDay) => {
+            if (!selectedDay) return;
+            if (minDate && selectedDay < minDate) return;
+            onChange(selectedDay);
+          }}
+        />
+      </PopoverContent>
+    </Popover>
+  );
+}
+
+/* -------------------------------------------------------
+   TIME SELECT
+---------------------------------------------------------*/
+interface TimeSelectProps {
+  value?: string;
+  onChange: (v: string) => void;
   error?: string;
-};
+}
 
-const TimeSelect: React.FC<TimeSelectProps> = ({ value, onChange, error }) => (
-  <Select value={value} onValueChange={onChange}>
-    <SelectTrigger className={cn("w-full text-xs", error && "border-red-500")} style={{ borderColor: '#191E3B', backgroundColor: '#FDDB32', color: '#564A0B' }}>
-      <SelectValue placeholder="Select time" />
-    </SelectTrigger>
-    <SelectContent>
-      {timeOptions.map((time) => (
-        <SelectItem key={time} value={time}>
-          {time}
-        </SelectItem>
-      ))}
-    </SelectContent>
-  </Select>
-);
+function TimeSelect(props: TimeSelectProps) {
+  const { value = "", onChange, error } = props;
+  const timeOptions = React.useMemo(() => generateTimeOptions(), []);
 
-// ----- Main Component -----
-export function SearchForm() {
+  return (
+    <Select value={value} onValueChange={onChange}>
+      <SelectTrigger
+        className={cn("w-full text-xs", error && "border-red-500")}
+        style={{
+          borderColor: "#191E3B",
+          backgroundColor: "#FDDB32",
+          color: "#564A0B",
+        }}
+      >
+        <SelectValue placeholder="Select time (optional)" />
+      </SelectTrigger>
+      <SelectContent>
+        {timeOptions.map((t) => (
+          <SelectItem key={t} value={t}>
+            {t || "— No time selected —"}
+          </SelectItem>
+        ))}
+      </SelectContent>
+    </Select>
+  );
+}
+
+/* -------------------------------------------------------
+   MAIN SEARCH FORM
+---------------------------------------------------------*/
+// Use stable defaults
+const now = new Date();
+const defaultStartTime = formatTimeIn12Hour(now);
+const defaultEndDate: Date | null = null;
+const defaultEndTime = "";
+
+/**
+ * The main SearchForm component, to be used in hero.tsx as <SearchForm />.
+ * Must return a valid React element.
+ */
+export function SearchForm(): React.ReactElement {
   const router = useRouter();
 
   const {
@@ -157,65 +250,38 @@ export function SearchForm() {
     watch,
     formState: { errors, isSubmitting },
   } = useForm<SearchFormData>({
-    resolver: zodResolver(searchFormSchema),
+    resolver: zodResolver(formSchema),
     defaultValues: {
       searchQuery: "",
       zipCode: "",
-      startDate: new Date(),
-      endDate: addDays(new Date(), 7),
-      startTime: "9:00 AM",
-      endTime: "5:00 PM",
+      startDate: now,
+      startTime: defaultStartTime,
+      endDate: defaultEndDate,
+      endTime: defaultEndTime,
     },
   });
 
-  const startDate = watch("startDate");
+  const startDateVal = watch("startDate");
+  const endDateVal = watch("endDate");
 
-  const onSubmit = async (data: SearchFormData) => {
-    // Helper to parse a 12-hour time string (e.g., "9:00 AM") into hour and minute values
-    function parseTime(timeStr: string) {
-      const [time, modifier] = timeStr.split(" ");
-      const [rawHours, rawMinutes] = time.split(":").map(Number);
-      let hours = rawHours;
-      const minutes = rawMinutes;
-      if (modifier === "PM" && hours !== 12) {
-        hours += 12;
-      }
-      if (modifier === "AM" && hours === 12) {
-        hours = 0;
-      }
-      return { hours, minutes };
+  const onSubmit = (data: SearchFormData) => {
+    // Merge start date/time
+    const sdt = combineDateTime(data.startDate, data.startTime);
+    // Merge end date/time (optional)
+    let edt: Date | null = null;
+    if (data.endDate) {
+      edt = combineDateTime(data.endDate, data.endTime || "");
     }
-    
-
-    // Clone the date objects so we don't mutate the originals
-    const startDateTime = new Date(data.startDate);
-    const endDateTime = new Date(data.endDate);
-
-    // Extract hours and minutes from the time strings
-    const { hours: startHours, minutes: startMinutes } = parseTime(data.startTime);
-    const { hours: endHours, minutes: endMinutes } = parseTime(data.endTime);
-
-    // Set the time values on the date objects (seconds and milliseconds are set to 0)
-    startDateTime.setHours(startHours, startMinutes, 0, 0);
-    endDateTime.setHours(endHours, endMinutes, 0, 0);
-
-    // Now startDateTime and endDateTime are Date objects combining the separate date and time fields.
-    const formattedData = {
-      searchQuery: data.searchQuery,
-      zipCode: data.zipCode,
-      startDateTime, // Date object
-      endDateTime,   // Date object
-    };
-
-    console.log("Search form submitted with data:", formattedData);
-
-    // If needed for routing or query parameters, you might convert the Date objects to strings.
+    // Construct query string
     const params = new URLSearchParams();
     params.append("searchQuery", data.searchQuery);
     params.append("zipCode", data.zipCode);
-    params.append("startDateTime", startDateTime.toISOString());
-    params.append("endDateTime", endDateTime.toISOString());
-
+    if (sdt) {
+      params.append("startDateTime", sdt.toISOString());
+    }
+    if (edt) {
+      params.append("endDateTime", edt.toISOString());
+    }
     router.push(`/request-details?${params.toString()}`);
   };
 
@@ -224,29 +290,22 @@ export function SearchForm() {
       id="search-form"
       className="w-full max-w-md mx-auto px-4"
       style={{
-        maxWidth: 'calc(100% + 5%)',
-        marginLeft: 'auto',
-        marginRight: 'auto',
+        maxWidth: "calc(100% + 5%)",
+        marginLeft: "auto",
+        marginRight: "auto",
       }}
     >
-      <h2
-        className="
-          text-foreground
-          font-bold
-          text-lg sm:text-xl
-          leading-tight
-          mb-3
-        "
-      >
+      <h2 className="text-foreground font-bold text-lg sm:text-xl leading-tight mb-3">
         FIND YOUR PERFECT
         <br />
         RENTAL
       </h2>
 
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+        {/* SEARCH & ZIPCODE */}
         <div className="space-y-4">
           {/* Search Query */}
-          <div className="relative flex-1">
+          <div>
             <Label htmlFor="search" className="mb-1 block">
               What are you looking for? <span className="text-red-500">*</span>
             </Label>
@@ -257,10 +316,9 @@ export function SearchForm() {
                 placeholder="Search for products..."
                 {...register("searchQuery")}
                 className={cn("pl-9", errors.searchQuery && "border-red-500")}
-                style={{ borderColor: '#191E3B', color: '#564A0B' }}
+                style={{ borderColor: "#191E3B", color: "#564A0B" }}
                 required
               />
-
             </div>
             {errors.searchQuery && (
               <p className="text-red-500 text-xs mt-1">
@@ -270,7 +328,7 @@ export function SearchForm() {
           </div>
 
           {/* Zip Code */}
-          <div className="relative flex-1">
+          <div>
             <Label htmlFor="zipcode" className="mb-1 block">
               Zip Code <span className="text-red-500">*</span>
             </Label>
@@ -279,10 +337,9 @@ export function SearchForm() {
               placeholder="Enter zip code"
               {...register("zipCode")}
               className={errors.zipCode && "border-red-500"}
-              style={{ borderColor: '#191E3B', color: '#564A0B' }}
+              style={{ borderColor: "#191E3B", color: "#564A0B" }}
               required
             />
-
             {errors.zipCode && (
               <p className="text-red-500 text-xs mt-1">
                 {errors.zipCode.message}
@@ -291,16 +348,17 @@ export function SearchForm() {
           </div>
         </div>
 
-        {/* Start Date & Time */}
+        {/* START DATE & TIME */}
         <div className="space-y-2">
-          <Label className="block mb-1">
-            Start Date & Time <span className="text-red-500">*</span>
+          <Label className="mb-1">
+            Start Date &amp; Time <span className="text-red-500">*</span>
           </Label>
           <div className="flex flex-col sm:flex-row gap-4">
-            <div className="w-full sm:w-3/5 min-w-0 overflow-hidden">
+            {/* Start Date */}
+            <div className="w-full sm:w-3/5 min-w-0">
               <Controller
-                control={control}
                 name="startDate"
+                control={control}
                 render={({ field }) => (
                   <DatePickerPopover
                     value={field.value}
@@ -311,10 +369,11 @@ export function SearchForm() {
                 )}
               />
             </div>
+            {/* Start Time */}
             <div className="w-full sm:w-2/5 min-w-0">
               <Controller
-                control={control}
                 name="startTime"
+                control={control}
                 render={({ field }) => (
                   <TimeSelect
                     value={field.value}
@@ -325,37 +384,45 @@ export function SearchForm() {
               />
             </div>
           </div>
-          {(errors.startDate || errors.startTime) && (
+          {errors.startDate && (
             <p className="text-red-500 text-xs mt-1">
-              {errors.startDate?.message || errors.startTime?.message}
+              {errors.startDate.message}
+            </p>
+          )}
+          {errors.startTime && (
+            <p className="text-red-500 text-xs mt-1">
+              {errors.startTime.message}
             </p>
           )}
         </div>
 
-        {/* End Date & Time */}
+        {/* END DATE & TIME (OPTIONAL) */}
         <div className="space-y-2">
-          <Label className="block mb-1">
-            End Date & Time <span className="text-red-500">*</span>
+          <Label className="mb-1">
+            End Date &amp; Time <span className="text-yellow-500">(Optional)</span>
           </Label>
           <div className="flex flex-col sm:flex-row gap-4">
-            <div className="w-full sm:w-3/5 min-w-0 overflow-hidden">
+            {/* End Date */}
+            <div className="w-full sm:w-3/5 min-w-0">
               <Controller
-                control={control}
                 name="endDate"
+                control={control}
                 render={({ field }) => (
                   <DatePickerPopover
                     value={field.value}
                     onChange={field.onChange}
+                    placeholder="No end date"
                     error={errors.endDate?.message}
-                    minDate={startDate || new Date("1900-01-01")}
+                    minDate={startDateVal || new Date("1900-01-01")}
                   />
                 )}
               />
             </div>
+            {/* End Time */}
             <div className="w-full sm:w-2/5 min-w-0">
               <Controller
-                control={control}
                 name="endTime"
+                control={control}
                 render={({ field }) => (
                   <TimeSelect
                     value={field.value}
@@ -373,6 +440,7 @@ export function SearchForm() {
           )}
         </div>
 
+        {/* SUBMIT BUTTON */}
         <Button
           type="submit"
           style={{ backgroundColor: "#191E3B", color: "#FFFFF1" }}
@@ -388,8 +456,13 @@ export function SearchForm() {
             "Search Rentals"
           )}
         </Button>
-
       </form>
+
+      {/* Debug info */}
+      <pre className="text-xs mt-4">
+        Start: {JSON.stringify(startDateVal, null, 2)}
+        {"\n"}End: {JSON.stringify(endDateVal, null, 2)}
+      </pre>
     </div>
   );
 }
