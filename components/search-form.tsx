@@ -5,8 +5,8 @@ import { useForm, Controller } from "react-hook-form";
 import { useRouter } from "next/navigation";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
-import { format, isValid } from "date-fns";
-import { CalendarIcon, Loader2, Search } from "lucide-react";
+import { addDays, format } from "date-fns";
+import { Search, Loader2, CalendarIcon } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -26,102 +26,26 @@ import {
 } from "@/components/ui/popover";
 import { cn } from "@/lib/utils";
 
-/* -------------------------------------------------------
-   HELPER: Format a Date into "hh:mm AM/PM" form
----------------------------------------------------------*/
-function formatTimeIn12Hour(date: Date): string {
-  let hours = date.getHours();
-  const minutes = date.getMinutes();
-  let period = "AM";
-
-  if (hours === 0) {
-    hours = 12; // 12 AM
-  } else if (hours === 12) {
-    period = "PM"; // 12 PM
-  } else if (hours > 12) {
-    hours -= 12;
-    period = "PM";
-  }
-
-  const minutesStr = String(minutes).padStart(2, "0");
-  return `${hours}:${minutesStr} ${period}`;
-}
-
-/* -------------------------------------------------------
-   HELPER: Combine date + "hh:mm AM/PM" into a single Date
----------------------------------------------------------*/
-function combineDateTime(date: Date | null, timeStr: string): Date | null {
-  if (!date || !isValid(date) || !timeStr) {
-    return date;
-  }
-
-  const [timePart, ampm] = timeStr.split(" ");
-  if (!timePart || !ampm) {
-    return date;
-  }
-
-  const [hrsStr, minsStr] = timePart.split(":");
-  if (!hrsStr || !minsStr) {
-    return date;
-  }
-
-  let hours = parseInt(hrsStr);
-  const minutes = parseInt(minsStr);
-  if (ampm === "PM" && hours < 12) hours += 12;
-  if (ampm === "AM" && hours === 12) hours = 0;
-
-  const newDate = new Date(date);
-  newDate.setHours(hours, minutes, 0, 0);
-  return newDate;
-}
-
-/* -------------------------------------------------------
-   HELPER: Generate time options in 30-min increments,
-           plus an empty string for "no selection".
----------------------------------------------------------*/
-function generateTimeOptions(): string[] {
-  const options: string[] = [""];
-  for (let hour = 0; hour < 24; hour++) {
-    for (let minute = 0; minute < 60; minute += 30) {
-      const period = hour < 12 ? "AM" : "PM";
-      const displayHour = hour % 12 === 0 ? 12 : hour % 12;
-      const minutesStr = String(minute).padStart(2, "0");
-      options.push(`${displayHour}:${minutesStr} ${period}`);
-    }
-  }
-  return options;
-}
-
-/* -------------------------------------------------------
-   SCHEMA & TYPES
----------------------------------------------------------*/
-const formSchema = z
+// ----- Schema & Types -----
+const searchFormSchema = z
   .object({
-    searchQuery: z
-      .string()
-      .min(1, "Search query is required"),
+    searchQuery: z.string().min(1, { message: "Search query is required" }),
     zipCode: z
       .string()
-      .min(1, "Zip code is required")
-      .regex(/^\d{5}(-\d{4})?$/, "Invalid zip code"),
+      .min(1, { message: "Zip code is required" })
+      .refine((val) => /^\d{5}(-\d{4})?$/.test(val), {
+        message: "Please enter a valid zip code (5 digits or 5+4 format)",
+      }),
     startDate: z.date({ required_error: "Start date is required" }),
+    endDate: z.date({ required_error: "End date is required" }),
     startTime: z.string({ required_error: "Start time is required" }),
-    endDate: z.date().nullable().optional(),
-    endTime: z.string().optional(),
+    endTime: z.string({ required_error: "End time is required" }),
   })
   .refine(
     (data) => {
-      const { startDate, startTime, endDate, endTime } = data;
-      // Only check "end must be after start" if user picks both endDate + endTime
-      if (!endDate || !endTime) {
-        return true;
-      }
-      const sdt = combineDateTime(startDate, startTime);
-      const edt = combineDateTime(endDate, endTime);
-      if (!sdt || !edt) {
-        return true;
-      }
-      return edt > sdt;
+      const startDateTime = combineDateTime(data.startDate, data.startTime);
+      const endDateTime = combineDateTime(data.endDate, data.endTime);
+      return endDateTime > startDateTime;
     },
     {
       message: "End date/time must be after start date/time",
@@ -129,118 +53,103 @@ const formSchema = z
     }
   );
 
-export type SearchFormData = z.infer<typeof formSchema>;
+export type SearchFormData = z.infer<typeof searchFormSchema>;
 
-/* -------------------------------------------------------
-   DATE PICKER
----------------------------------------------------------*/
-interface DatePickerPopoverProps {
-  value: Date | null;
-  onChange: (val: Date | null) => void;
+// ----- Helper Functions & Constants -----
+const combineDateTime = (date: Date, timeString: string): Date => {
+  const [timePart, period] = timeString.split(" ");
+  const [hoursStr, minutesStr] = timePart.split(":");
+  let hours = Number(hoursStr);
+  const minutes = Number(minutesStr);
+
+  if (period === "PM" && hours < 12) hours += 12;
+  else if (period === "AM" && hours === 12) hours = 0;
+    const result = new Date(date);
+  result.setHours(hours, minutes);
+  return result;
+};
+
+const generateTimeOptions = () => {
+  const options: string[] = [];
+  for (let hour = 0; hour < 24; hour++) {
+    for (let minute = 0; minute < 60; minute += 30) {
+      const period = hour < 12 ? "AM" : "PM";
+      const displayHour = hour % 12 === 0 ? 12 : hour % 12;
+      const formattedMinute = minute.toString().padStart(2, "0");
+      options.push(`${displayHour}:${formattedMinute} ${period}`);
+    }
+  }
+  return options;
+};
+
+
+const timeOptions = generateTimeOptions();
+
+// ----- Reusable UI Components -----
+type DatePickerPopoverProps = {
+  value: Date;
+  onChange: (value: Date) => void;
   error?: string;
-  placeholder?: string;
   minDate?: Date;
-}
+};
 
-function DatePickerPopover(props: DatePickerPopoverProps) {
-  const {
-    value,
-    onChange,
-    error,
-    placeholder = "Select date",
-    minDate,
-  } = props;
-
-  return (
-    <Popover>
-      <PopoverTrigger asChild>
-        <Button
-          variant="outline"
-          className={cn(
-            "w-full text-xs truncate justify-start text-left font-normal",
-            error && "border-red-500",
-            !value && "text-muted-foreground"
-          )}
-          style={{
-            borderColor: "#191E3B",
-            backgroundColor: "#FDDB32",
-            color: "#564A0B",
-          }}
-        >
-          <CalendarIcon className="mr-2 h-4 w-4" />
-          {value ? format(value, "PPP") : placeholder}
-        </Button>
-      </PopoverTrigger>
-      <PopoverContent className="w-auto p-0" align="start">
-        <Calendar
-          mode="single"
-          showOutsideDays
-          selected={value ?? undefined}
-          disabled={(dayToCheck) => {
-            if (minDate && dayToCheck < minDate) return true;
-            return false;
-          }}
-          onDayClick={(selectedDay) => {
-            if (!selectedDay) return;
-            if (minDate && selectedDay < minDate) return;
-            onChange(selectedDay);
-          }}
-        />
-      </PopoverContent>
-    </Popover>
-  );
-}
-
-/* -------------------------------------------------------
-   TIME SELECT
----------------------------------------------------------*/
-interface TimeSelectProps {
-  value?: string;
-  onChange: (v: string) => void;
-  error?: string;
-}
-
-function TimeSelect(props: TimeSelectProps) {
-  const { value = "", onChange, error } = props;
-  const timeOptions = React.useMemo(() => generateTimeOptions(), []);
-
-  return (
-    <Select value={value} onValueChange={onChange}>
-      <SelectTrigger
-        className={cn("w-full text-xs", error && "border-red-500")}
-        style={{
-          borderColor: "#191E3B",
-          backgroundColor: "#FDDB32",
-          color: "#564A0B",
-        }}
+const DatePickerPopover: React.FC<DatePickerPopoverProps> = ({
+  value,
+  onChange,
+  error,
+  minDate,
+}) => (
+  <Popover>
+    <PopoverTrigger asChild>
+      <Button
+        variant="outline"
+        className={cn(
+          "w-full text-xs truncate justify-start text-left font-normal",
+          error && "border-red-500",
+          !value && "text-muted-foreground"
+        )}
+        style={{ borderColor: '#191E3B', backgroundColor: '#FDDB32', color: '#564A0B' }}
       >
-        <SelectValue placeholder="Select time (optional)" />
-      </SelectTrigger>
-      <SelectContent>
-        {timeOptions.map((t) => (
-          <SelectItem key={t} value={t}>
-            {t || "— No time selected —"}
-          </SelectItem>
-        ))}
-      </SelectContent>
-    </Select>
-  );
-}
+        <CalendarIcon className="mr-2 h-4 w-4" />
+        {value ? format(value, "PPP") : "Select date"}
+      </Button>
+    </PopoverTrigger>
+    <PopoverContent className="w-auto p-0" align="start">
+      <Calendar
+        mode="single"
+        selected={value}
+        onSelect={(day) => {
+          if (day) onChange(day); // Only call onChange if a valid date is returned.
+        }}
+        disabled={(date) => (minDate ? date < minDate : false)}
+        initialFocus
+      />
+    </PopoverContent>
+  </Popover>
+);
 
-/* -------------------------------------------------------
-   MAIN SEARCH FORM
----------------------------------------------------------*/
-// Use stable defaults
-const now = new Date();
-const defaultStartTime = formatTimeIn12Hour(now);
-const defaultEndDate: Date | null = null;
-const defaultEndTime = "";
+type TimeSelectProps = {
+  value: string;
+  onChange: (value: string) => void;
+  error?: string;
+};
 
-/**
- * The main SearchForm component, to be used in hero.tsx as <SearchForm />.
- * Must return a valid React element.
- */
-export function SearchForm(): React.ReactElement {
+const TimeSelect: React.FC<TimeSelectProps> = ({ value, onChange, error }) => (
+  <Select value={value} onValueChange={onChange}>
+    <SelectTrigger className={cn("w-full text-xs", error && "border-red-500")} style={{ borderColor: '#191E3B', backgroundColor: '#FDDB32', color: '#564A0B' }}>
+      <SelectValue placeholder="Select time" />
+    </SelectTrigger>
+    <SelectContent>
+      {timeOptions.map((time) => (
+        <SelectItem key={time} value={time}>
+          {time}
+        </SelectItem>
+      ))}
+    </SelectContent>
+  </Select>
+);
+
+export function SearchForm() {
   const router = useRouter();
 
   const {
@@ -250,38 +159,65 @@ export function SearchForm(): React.ReactElement {
     watch,
     formState: { errors, isSubmitting },
   } = useForm<SearchFormData>({
-    resolver: zodResolver(formSchema),
+     resolver: zodResolver(searchFormSchema),
     defaultValues: {
       searchQuery: "",
       zipCode: "",
-      startDate: now,
-      startTime: defaultStartTime,
-      endDate: defaultEndDate,
-      endTime: defaultEndTime,
+      startDate: new Date(),
+      endDate: addDays(new Date(), 7),
+      startTime: "9:00 AM",
+      endTime: "5:00 PM",
     },
   });
 
-  const startDateVal = watch("startDate");
-  const endDateVal = watch("endDate");
+  const startDate = watch("startDate");
 
-  const onSubmit = (data: SearchFormData) => {
-    // Merge start date/time
-    const sdt = combineDateTime(data.startDate, data.startTime);
-    // Merge end date/time (optional)
-    let edt: Date | null = null;
-    if (data.endDate) {
-      edt = combineDateTime(data.endDate, data.endTime || "");
+  const onSubmit = async (data: SearchFormData) => {
+    // Helper to parse a 12-hour time string (e.g., "9:00 AM") into hour and minute values
+    function parseTime(timeStr: string) {
+      const [time, modifier] = timeStr.split(" ");
+      const [rawHours, rawMinutes] = time.split(":").map(Number);
+      let hours = rawHours;
+      const minutes = rawMinutes;
+      if (modifier === "PM" && hours !== 12) {
+        hours += 12;
+      }
+      if (modifier === "AM" && hours === 12) {
+        hours = 0;
+      }
+      return { hours, minutes };
     }
-    // Construct query string
+
+        
+
+    // Clone the date objects so we don't mutate the originals
+    const startDateTime = new Date(data.startDate);
+    const endDateTime = new Date(data.endDate);
+
+    // Extract hours and minutes from the time strings
+    const { hours: startHours, minutes: startMinutes } = parseTime(data.startTime);
+    const { hours: endHours, minutes: endMinutes } = parseTime(data.endTime);
+
+    // Set the time values on the date objects (seconds and milliseconds are set to 0)
+    startDateTime.setHours(startHours, startMinutes, 0, 0);
+    endDateTime.setHours(endHours, endMinutes, 0, 0);
+
+    // Now startDateTime and endDateTime are Date objects combining the separate date and time fields.
+    const formattedData = {
+      searchQuery: data.searchQuery,
+      zipCode: data.zipCode,
+      startDateTime, // Date object
+      endDateTime,   // Date object
+    };
+
+    console.log("Search form submitted with data:", formattedData);
+
+    // If needed for routing or query parameters, you might convert the Date objects to strings.
     const params = new URLSearchParams();
     params.append("searchQuery", data.searchQuery);
     params.append("zipCode", data.zipCode);
-    if (sdt) {
-      params.append("startDateTime", sdt.toISOString());
-    }
-    if (edt) {
-      params.append("endDateTime", edt.toISOString());
-    }
+    params.append("startDateTime", startDateTime.toISOString());
+    params.append("endDateTime", endDateTime.toISOString());
     router.push(`/request-details?${params.toString()}`);
   };
 
@@ -357,8 +293,8 @@ export function SearchForm(): React.ReactElement {
             {/* Start Date */}
             <div className="w-full sm:w-3/5 min-w-0">
               <Controller
-                name="startDate"
                 control={control}
+                name="startDate"
                 render={({ field }) => (
                   <DatePickerPopover
                     value={field.value}
@@ -369,11 +305,10 @@ export function SearchForm(): React.ReactElement {
                 )}
               />
             </div>
-            {/* Start Time */}
             <div className="w-full sm:w-2/5 min-w-0">
               <Controller
-                name="startTime"
                 control={control}
+                name="startTime"
                 render={({ field }) => (
                   <TimeSelect
                     value={field.value}
@@ -384,9 +319,10 @@ export function SearchForm(): React.ReactElement {
               />
             </div>
           </div>
-          {errors.startDate && (
+
+          {(errors.startDate || errors.startTime) && (
             <p className="text-red-500 text-xs mt-1">
-              {errors.startDate.message}
+              {errors.startDate?.message || errors.startTime?.message}
             </p>
           )}
           {errors.startTime && (
@@ -396,33 +332,31 @@ export function SearchForm(): React.ReactElement {
           )}
         </div>
 
-        {/* END DATE & TIME (OPTIONAL) */}
+        {/* End Date & Time */}
         <div className="space-y-2">
           <Label className="mb-1">
-            End Date &amp; Time <span className="text-yellow-500">(Optional)</span>
+            End Date &amp; Time
           </Label>
           <div className="flex flex-col sm:flex-row gap-4">
             {/* End Date */}
             <div className="w-full sm:w-3/5 min-w-0">
               <Controller
-                name="endDate"
                 control={control}
+                name="endDate"
                 render={({ field }) => (
                   <DatePickerPopover
-                    value={field.value ?? null}
+                    value={field.value}
                     onChange={field.onChange}
-                    placeholder="No end date"
                     error={errors.endDate?.message}
-                    minDate={startDateVal || new Date("1900-01-01")}
+                    minDate={startDate || new Date("1900-01-01")}
                   />
                 )}
               />
             </div>
-            {/* End Time */}
             <div className="w-full sm:w-2/5 min-w-0">
               <Controller
-                name="endTime"
                 control={control}
+                name="endTime"
                 render={({ field }) => (
                   <TimeSelect
                     value={field.value}
@@ -439,8 +373,6 @@ export function SearchForm(): React.ReactElement {
             </p>
           )}
         </div>
-
-        {/* SUBMIT BUTTON */}
         <Button
           type="submit"
           style={{ backgroundColor: "#191E3B", color: "#FFFFF1" }}
@@ -457,12 +389,6 @@ export function SearchForm(): React.ReactElement {
           )}
         </Button>
       </form>
-
-      {/* Debug info */}
-      <pre className="text-xs mt-4">
-        Start: {JSON.stringify(startDateVal, null, 2)}
-        {"\n"}End: {JSON.stringify(endDateVal, null, 2)}
-      </pre>
     </div>
   );
 }
