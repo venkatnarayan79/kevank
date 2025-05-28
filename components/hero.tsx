@@ -92,9 +92,6 @@ useEffect(() => {
             <h1 className="font-extrabold tracking-tight leading-tight text-3xl sm:text-4xl">
               RENT FROM THOUSANDS OF<br />APPLIANCES AND EQUIPMENT<br />IN YOUR<br />NEIGHBORHOOD
             </h1>
-            <p className="text-base normal-case">
-              Rent from what you need, share what you don’t
-            </p>
           </div>
         </div>
 
