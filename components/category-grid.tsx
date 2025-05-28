@@ -25,7 +25,7 @@ const CategoryGrid: React.FC = () => {
     <section aria-label="Product categories" className="w-full py-12 md:py-20">
       <div className="max-w-7xl mx-auto px-4">
         <h1 className="text-3xl font-bold text-[#003366] mb-2 text-center">
-          Popoular Categories
+          Popular Categories
         </h1>
         <hr className="border-t-2 border-[#FDDB32] w-24 mx-auto mb-10" />
 
