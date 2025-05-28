@@ -220,7 +220,15 @@ export function SearchForm() {
   };
 
   return (
-    <div id="search-form" className="p-1 w-full max-w-md mx-auto px-4">
+    <div
+      id="search-form"
+      className="w-full max-w-md mx-auto px-4"
+      style={{
+        maxWidth: 'calc(100% + 5%)',
+        marginLeft: 'auto',
+        marginRight: 'auto',
+      }}
+    >
       <h2
         className="
           text-foreground

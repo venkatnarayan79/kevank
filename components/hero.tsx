@@ -106,17 +106,17 @@ useEffect(() => {
 
         {/* Desktop grid */}
         <div className="hidden md:grid container mx-auto h-full px-4 grid-cols-12 gap-x-6 items-center pointer-events-auto">
-          <div className="col-start-5 col-span-3 space-y-4" style={{ color: '#191E3B' }}>
+          <div className="col-start-4 col-span-4 space-y-4" style={{ color: '#191E3B' }}>
             <h1 className="font-bold leading-none text-[clamp(2rem,6vw,30pt)]">
-              RENT FROM THOUSANDS OF<br />APPLIANCES AND EQUIPMENT<br />IN YOUR<br />NEIGHBORHOOD
+              RENT FROM THOUSANDS OF APPLIANCES <br />AND EQUIPMENT<br />IN YOUR<br />NEIGHBORHOOD
             </h1>
             <p className="text-base md:text-l max-w-prose normal-case">
               Rent from what you need, share what you don’t
             </p>
 
           </div>
-          <div className="col-start-9 col-span-3 flex justify-start pointer-events-auto">
-          <div className="p-8 rounded-2xl shadow-xl w-full" style={{ backgroundColor: '#FDDB32' }}>
+          <div className="col-start-8 col-span-4 flex justify-end pointer-events-auto">
+          <div className="p-4 rounded-2xl shadow-xl max-w-[90rem]" style={{ backgroundColor: '#FDDB32' }}>
             <SearchForm />
           </div>
 
