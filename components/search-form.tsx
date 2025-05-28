@@ -105,7 +105,7 @@ const DatePickerPopover: React.FC<DatePickerPopoverProps> = ({
           error && "border-red-500",
           !value && "text-muted-foreground"
         )}
-        style={{ borderColor: '#0C0E1C', backgroundColor: '#FDDB32', color: '#564A0B' }}
+        style={{ borderColor: '#191E3B', backgroundColor: '#FDDB32', color: '#564A0B' }}
       >
         <CalendarIcon className="mr-2 h-4 w-4" />
         {value ? format(value, "PPP") : "Select date"}
@@ -133,7 +133,7 @@ type TimeSelectProps = {
 
 const TimeSelect: React.FC<TimeSelectProps> = ({ value, onChange, error }) => (
   <Select value={value} onValueChange={onChange}>
-    <SelectTrigger className={cn("w-full text-xs", error && "border-red-500")} style={{ borderColor: '#0C0E1C', backgroundColor: '#FDDB32', color: '#564A0B' }}>
+    <SelectTrigger className={cn("w-full text-xs", error && "border-red-500")} style={{ borderColor: '#191E3B', backgroundColor: '#FDDB32', color: '#564A0B' }}>
       <SelectValue placeholder="Select time" />
     </SelectTrigger>
     <SelectContent>
@@ -249,7 +249,7 @@ export function SearchForm() {
                 placeholder="Search for products..."
                 {...register("searchQuery")}
                 className={cn("pl-9", errors.searchQuery && "border-red-500")}
-                style={{ borderColor: '#0C0E1C', color: '#564A0B' }}
+                style={{ borderColor: '#191E3B', color: '#564A0B' }}
                 required
               />
 
@@ -271,7 +271,7 @@ export function SearchForm() {
               placeholder="Enter zip code"
               {...register("zipCode")}
               className={errors.zipCode && "border-red-500"}
-              style={{ borderColor: '#0C0E1C', color: '#564A0B' }}
+              style={{ borderColor: '#191E3B', color: '#564A0B' }}
               required
             />
 
@@ -367,7 +367,7 @@ export function SearchForm() {
 
         <Button
           type="submit"
-          style={{ backgroundColor: "#0C0E1C", color: "#FFFFF1" }}
+          style={{ backgroundColor: "#191E3B", color: "#FFFFF1" }}
           className="w-full cursor-pointer"
           disabled={isSubmitting}
         >

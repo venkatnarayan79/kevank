@@ -71,12 +71,12 @@ const Testimonials: React.FC = () => {
 
       <div className="max-w-[90%] mx-auto px-4 grid lg:grid-cols-[600px_1fr] gap-16">
         <aside className="flex flex-col justify-center">
-          <h2 className="text-3xl font-bold text-[#0C0E1C] leading-tight">
+          <h2 className="text-3xl font-bold text-[#191E3B] leading-tight">
             Over&nbsp;150K<br />happy&nbsp;subscribers
           </h2>
           <div className="mt-1 h-1 w-16 bg-[#FDDB32]" />
 
-          <p className="mt-6 text-[#0C0E1C] max-w-xs">
+          <p className="mt-6 text-[#191E3B] max-w-xs">
             Hear what our customers are saying
           </p>
 
@@ -144,11 +144,11 @@ const Testimonials: React.FC = () => {
                     <UserRound className="h-6 w-6 stroke-gray-500" aria-hidden="true" />
                   </span>
                 )}
-                <h3 className="font-semibold text-[#0C0E1C]">{name}</h3>
+                <h3 className="font-semibold text-[#191E3B]">{name}</h3>
 
 
               </header>
-              <p className="mt-8 text-[#0C0E1C] leading-7">{message}</p>
+              <p className="mt-8 text-[#191E3B] leading-7">{message}</p>
 
 
             </article>

@@ -14,8 +14,8 @@ export function Navbar() {
 
   const listingBtnClass = `${buttonVariants({ variant: "ghost" })} 
     border border-[#9dd1a8] 
-    bg-[#0C0E1C] 
-    hover:bg-[#0C0E1C]/90 
+    bg-[#191E3B] 
+    hover:bg-[#191E3B]/90 
     hover:border-[#9dd1a8]
     text-[#FFFFF1]`
 
@@ -55,7 +55,7 @@ export function Navbar() {
             <Button
               variant="ghost"
               size="icon"
-              className="bg-[#0C0E1C] text-[#FFFFF1] hover:bg-[#0C0E1C]/90" 
+              className="bg-[#191E3B] text-[#FFFFF1] hover:bg-[#191E3B]/90" 
               onClick={toggleMenu}
               aria-expanded={isMenuOpen}
             >

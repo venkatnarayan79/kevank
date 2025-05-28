@@ -88,7 +88,7 @@ useEffect(() => {
       <div className="absolute inset-0 z-40 pointer-events-none flex flex-col items-center gap-6 pt-12 md:block md:pt-0">
         {/* Mobile heading & paragraph */}
         <div className="w-full md:hidden flex justify-start px-5">
-          <div className="max-w-[22rem] space-y-1 text-left pl-4 mb-6" style={{ color: '#FFFFF1' }}>
+          <div className="max-w-[22rem] space-y-1 text-left pl-4 mb-6" style={{ color: '#191E3B' }}>
             <h1 className="font-extrabold tracking-tight leading-tight text-3xl sm:text-4xl">
               RENT FROM THOUSANDS OF<br />APPLIANCES AND EQUIPMENT<br />IN YOUR<br />NEIGHBORHOOD
             </h1>
@@ -109,7 +109,7 @@ useEffect(() => {
 
         {/* Desktop grid */}
         <div className="hidden md:grid container mx-auto h-full px-4 grid-cols-12 gap-x-6 items-center pointer-events-auto">
-          <div className="col-start-5 col-span-3 space-y-4" style={{ color: '#FFFFF1' }}>
+          <div className="col-start-5 col-span-3 space-y-4" style={{ color: '#191E3B' }}>
             <h1 className="font-bold leading-none text-[clamp(2rem,6vw,30pt)]">
               RENT FROM THOUSANDS OF<br />APPLIANCES AND EQUIPMENT<br />IN YOUR<br />NEIGHBORHOOD
             </h1>

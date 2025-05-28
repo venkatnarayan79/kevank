@@ -50,7 +50,7 @@ const CategoryGrid: React.FC = () => {
 
             >
               <Image src={imageSrc} alt={alt} width={40} height={40} className="object-contain" />
-              <span className="mt-2 text-sm font-medium text-[#0C0E1C] text-center leading-tight line-clamp-2 h-[2.5rem]">
+              <span className="mt-2 text-sm font-medium text-[#191E3B] text-center leading-tight line-clamp-2 h-[2.5rem]">
                 {name}
               </span>
             </button>

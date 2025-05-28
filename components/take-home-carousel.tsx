@@ -106,7 +106,7 @@ const TakeHomeCarousel: React.FC = () => {
             {slideCards.map(({ id, name, rent, imageName }) => (
               <div
                 key={id}
-                className="flex flex-col flex-shrink-0 w-full sm:w-64 md:w-72 lg:w-80 rounded-lg bg-[#0C0E1C] p-5"
+                className="flex flex-col flex-shrink-0 w-full sm:w-64 md:w-72 lg:w-80 rounded-lg bg-[#191E3B] p-5"
               >
 
 
@@ -129,7 +129,7 @@ const TakeHomeCarousel: React.FC = () => {
 
                   <button
                     onClick={scrollToTop}
-                    className="px-4 py-2 text-sm font-medium text-[#0C0E1C] bg-[#FDDB32] rounded-md transition hover:bg-[#FDDB32]/90"
+                    className="px-4 py-2 text-sm font-medium text-[#191E3B] bg-[#FDDB32] rounded-md transition hover:bg-[#FDDB32]/90"
                     type="button"
                   >
                     See More
