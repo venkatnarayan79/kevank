@@ -90,9 +90,11 @@ useEffect(() => {
         <div className="w-full md:hidden flex justify-start px-5">
           <div className="max-w-[22rem] space-y-1 text-left pl-4 mb-6" style={{ color: '#FFFFF1' }}>
             <h1 className="font-extrabold tracking-tight leading-tight text-3xl sm:text-4xl">
-              RENT WHAT<br />YOU NEED,<br />SHARE WHAT<br />YOU DON&apos;T.
+              RENT FROM THOUSANDS OF<br />APPLIANCES AND EQUIPMENT<br />IN YOUR<br />NEIGHBORHOOD
             </h1>
-
+            <p className="text-base normal-case">
+              Rent from what you need, share what you don’t
+            </p>
           </div>
         </div>
 
@@ -109,10 +111,10 @@ useEffect(() => {
         <div className="hidden md:grid container mx-auto h-full px-4 grid-cols-12 gap-x-6 items-center pointer-events-auto">
           <div className="col-start-5 col-span-3 space-y-4" style={{ color: '#FFFFF1' }}>
             <h1 className="font-bold leading-none text-[clamp(2rem,6vw,30pt)]">
-              RENT WHAT<br />YOU NEED,<br />SHARE WHAT<br />YOU DON&apos;T.
+              RENT FROM THOUSANDS OF<br />APPLIANCES AND EQUIPMENT<br />IN YOUR<br />NEIGHBORHOOD
             </h1>
-            <p className="text-base md:text-l max-w-prose">
-              Access thousands of tools, appliances,<br /> and equipment in your neighborhood.<br /> Save money, reduce waste, and connect<br /> with your community.
+            <p className="text-base md:text-l max-w-prose normal-case">
+              Rent from what you need, share what you don’t
             </p>
 
           </div>
