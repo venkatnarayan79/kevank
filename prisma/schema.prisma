@@ -32,10 +32,22 @@ model Listing {
   email              String
   productName        String
   productDescription String
+  images             Image[]
   rentalPrice        Float
   zipCode            String
   startDate          DateTime
   endDate            DateTime
   createdAt          DateTime @default(now())
   updatedAt          DateTime @updatedAt
+}
+
+model Image {
+     id        String   @id @default(auto()) @map("_id") @db.ObjectId
+     key       String
+     url       String
+     width     Int?
+     height    Int?
+     sizeBytes Int?
+     listing   Listing  @relation(fields: [listingId], references: [id], onDelete: Cascade)
+     listingId String   @db.ObjectId
 }

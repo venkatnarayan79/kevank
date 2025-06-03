@@ -6,6 +6,8 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { Loader2, CheckCircle } from "lucide-react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+import imageCompression from "browser-image-compression";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -13,47 +15,38 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { RecommendedCarousel } from "@/components/ui/RecommendedCarousel";
 
-
-// Define schema for the form
-const createListingSchema = z.object({
-  name: z.string().min(2, { message: "Name must be at least 2 characters" }),
-  email: z.string().email({ message: "Please enter a valid email address" }),
-  productName: z.string().min(3, { message: "Product name must be at least 3 characters" }),
-  productDescription: z.string().min(10, { message: "Description must be at least 10 characters" }),
-  rentalPrice: z.preprocess(
-    (val) => {
-      if (typeof val === "string") {
-        return parseFloat(val);
-      }
-      return val;
-    },
-    z.number().positive({ message: "Price must be a positive number" })
-  ),
-  zipCode: z
-    .string()
-    .min(1, { message: "Zip code is required" })
-    .refine((val) => /^\d{5}(-\d{4})?$/.test(val), {
-      message: "Please enter a valid zip code (5 digits or 5+4 format)",
-    }),
-  
-    // Added start date
-    startDate: z.date({
-      required_error: "Start date is required",
-    }),
-
-    // Added end date
-    endDate: z.date({
-      required_error: "End date is required",
-    }),
-
-    // Added below validation
-}).refine((data) => data.endDate >= data.startDate, {
-  message: "End date must be after start date",
-  path: ["endDate"],
-});
+// ─── 1. Zod Schema Definition ────────────────────────────────────────────────────
+const createListingSchema = z
+  .object({
+    name: z.string().min(2, { message: "Name must be at least 2 characters" }),
+    email: z.string().email({ message: "Please enter a valid email address" }),
+    productName: z
+      .string()
+      .min(3, { message: "Product name must be at least 3 characters" }),
+    productDescription: z
+      .string()
+      .min(10, { message: "Description must be at least 10 characters" }),
+    rentalPrice: z.preprocess(
+      (val) => (typeof val === "string" ? parseFloat(val) : val),
+      z.number().positive({ message: "Price must be a positive number" })
+    ),
+    zipCode: z
+      .string()
+      .min(1, { message: "Zip code is required" })
+      .refine((val) => /^\d{5}(-\d{4})?$/.test(val), {
+        message: "Please enter a valid zip code (5 digits or 5+4 format)",
+      }),
+    startDate: z.date({ required_error: "Start date is required" }),
+    endDate: z.date({ required_error: "End date is required" }),
+  })
+  .refine((data) => data.endDate >= data.startDate, {
+    message: "End date must be after start date",
+    path: ["endDate"],
+  });
 
 type CreateListingData = z.infer<typeof createListingSchema>;
 
+// ─── 2. Success Message Component ────────────────────────────────────────────────
 function ListingSuccess() {
   return (
     <main className="container mx-auto px-4 py-12">
@@ -64,7 +57,8 @@ function ListingSuccess() {
           </div>
           <h2 className="text-2xl font-bold mb-2">Listing Created!</h2>
           <p className="text-muted-foreground mb-6">
-            Your listing has been successfully created and will be reviewed by our team shortly.
+            Your listing has been successfully created and will be reviewed by
+            our team shortly.
           </p>
           <Button asChild>
             <Link href="/">Return to Home</Link>
@@ -75,8 +69,14 @@ function ListingSuccess() {
   );
 }
 
+// ─── 3. Main Page Component ─────────────────────────────────────────────────────
 export default function CreateListingPage() {
   const [isSubmitted, setIsSubmitted] = useState(false);
+  const [imagesToUpload, setImagesToUpload] = useState<File[]>([]);
+  const [previewURLs, setPreviewURLs] = useState<string[]>([]);
+  const [uploadErrors, setUploadErrors] = useState<string[]>([]);
+  const [isUploadingImages, setIsUploadingImages] = useState(false);
+  const router = useRouter();
 
   const {
     register,
@@ -96,15 +96,65 @@ export default function CreateListingPage() {
     },
   });
 
-  const onSubmit = async (data: CreateListingData) => {
-    console.log("Full Listings data:", data);
+  // ─── 3.3. handleFileSelect Implementation ─────────────────────────────────
+  async function handleFileSelect(event: React.ChangeEvent<HTMLInputElement>) {
+    const newlySelected = Array.from(event.target.files || []);
+    const maxFilesAllowed = 4;
+
+    // If total (existing + new) exceeds limit, show error and abort
+    if (imagesToUpload.length + newlySelected.length > maxFilesAllowed) {
+      setUploadErrors([`You can upload a maximum of ${maxFilesAllowed} images.`]);
+      return;
+    }
+
+    // Validate MIME types on newlySelected
+    const validTypes = ["image/jpeg", "image/png", "image/webp"];
+    const invalid = newlySelected.filter((f) => !validTypes.includes(f.type));
+    if (invalid.length > 0) {
+      setUploadErrors(["Only JPEG, PNG, or WebP formats are allowed."]);
+      return;
+    }
+
+    // Combine existing + new files
+    const combined = [...imagesToUpload, ...newlySelected];
+
+    // Compress & generate previews for all combined files
+    const compressedList: File[] = [];
+    const previewList: string[] = [];
+
+    for (const file of combined) {
+      try {
+        const options = { maxSizeMB: 1, maxWidthOrHeight: 1920, useWebWorker: true };
+        const compressed = await imageCompression(file, options);
+        compressedList.push(compressed);
+        previewList.push(URL.createObjectURL(compressed));
+      } catch {
+        compressedList.push(file);
+        previewList.push(URL.createObjectURL(file));
+      }
+    }
+
+    setImagesToUpload(compressedList);
+    setPreviewURLs(previewList);
+    setUploadErrors([]);
+  }
+
+  // ─── 3.4. removeImageAtIndex Implementation ─────────────────────────────────
+  function removeImageAtIndex(index: number) {
+    setImagesToUpload((prev) => prev.filter((_, i) => i !== index));
+    setPreviewURLs((prev) => prev.filter((_, i) => i !== index));
+    setUploadErrors([]);
+  }
+
+  // ─── 3.5. onSubmit Implementation ───────────────────────────────────────────
+  async function onSubmit(data: CreateListingData) {
+    setUploadErrors([]);
 
     try {
+      // Create listing record
       const response = await fetch("/api/listings", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify(data),
       });
 
@@ -112,11 +162,35 @@ export default function CreateListingPage() {
         throw new Error("Failed to save data");
       }
 
+      const listing = await response.json();
+      const listingId = listing.id;
+
+      // Upload images if any selected
+      if (imagesToUpload.length > 0) {
+        setIsUploadingImages(true);
+        const formData = new FormData();
+        imagesToUpload.forEach((file) => formData.append("images", file));
+
+        const uploadRes = await fetch(`/api/listings/${listingId}/images`, {
+          method: "POST",
+          body: formData,
+        });
+
+        const uploadJson = await uploadRes.json();
+        if (!uploadRes.ok) {
+          throw new Error(uploadJson.error || "Image upload failed");
+        }
+
+        setIsUploadingImages(false);
+      }
+
       setIsSubmitted(true);
-    } catch (error) {
-      console.error("Error submitting form:", error);
+    } catch (error: any) {
+      console.error("Error in onSubmit:", error);
+      setUploadErrors([error.message || "Submission error"]);
+      setIsUploadingImages(false);
     }
-  };
+  }
 
   if (isSubmitted) {
     return <ListingSuccess />;
@@ -132,15 +206,24 @@ export default function CreateListingPage() {
           </p>
         </div>
 
-        <RecommendedCarousel
-        mainHeading="Recommended Listings"
-        subHeading="Discover popular items to list"
-      />
+        <RecommendedCarousel mainHeading="Recommended Listings" subHeading="Discover popular items to list" />
 
         <div className="bg-background rounded-lg shadow-lg p-6">
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+            {/* ─── Global Errors ────────────────────────────────────────────── */}
+            {uploadErrors.length > 0 && (
+              <div className="mb-4 space-y-1 p-3 bg-red-50 border border-red-200 rounded">
+                {uploadErrors.map((err, idx) => (
+                  <p key={idx} className="text-sm text-red-700">
+                    {err}
+                  </p>
+                ))}
+              </div>
+            )}
+            {/* ────────────────────────────────────────────────────────────────── */}
+
             <div className="space-y-4">
-              {/* Owner Information */}
+              {/* ─── Owner Information ───────────────────────────────────────── */}
               <div>
                 <h2 className="text-xl font-semibold mb-4">Your Information</h2>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -171,8 +254,9 @@ export default function CreateListingPage() {
                   </div>
                 </div>
               </div>
+              {/* ────────────────────────────────────────────────────────────── */}
 
-              {/* Listing Information */}
+              {/* ─── Rental Information ─────────────────────────────────────── */}
               <div>
                 <h2 className="text-xl font-semibold mb-4">Rental Information</h2>
                 <div className="space-y-4">
@@ -264,19 +348,64 @@ export default function CreateListingPage() {
                   </div>
                 </div>
               </div>
+              {/* ────────────────────────────────────────────────────────────── */}
             </div>
 
+            {/* ─── Image Upload Section (With Matching Heading Styling) ───────────────── */}
+            <div>
+              <Label htmlFor="image-upload" className="mb-1 block text-xl font-semibold">
+                Upload Photos <span className="text-red-500">*</span>
+              </Label>
+              <input
+                type="file"
+                accept="image/*"
+                multiple
+                id="image-upload"
+                onChange={handleFileSelect}
+                className="block w-full text-sm text-gray-700 file:mr-4 file:py-2 file:px-4 file:rounded file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"
+              />
+              {uploadErrors.map((err, idx) => (
+                <p key={idx} className="text-red-500 text-xs mt-1">
+                  {err}
+                </p>
+              ))}
+              <div className="mt-4 flex flex-wrap gap-2">
+                {previewURLs.map((url, idx) => (
+                  <div key={idx} className="relative h-24 w-24 border rounded overflow-hidden">
+                    <img src={url} alt={`Preview ${idx + 1}`} className="h-full w-full object-cover" />
+                    <button
+                      type="button"
+                      onClick={() => removeImageAtIndex(idx)}
+                      className="absolute top-1 right-1 h-5 w-5 flex items-center justify-center rounded-full bg-red-600 text-white text-xs"
+                    >
+                      &times;
+                    </button>
+                  </div>
+                ))}
+              </div>
+            </div>
+            {/* ────────────────────────────────────────────────────────────────── */}
+
+            {/* ─── Submit Button & Spinner ─────────────────────────────────── */}
             <div className="pt-2">
-              <Button type="submit" className="w-full" disabled={isSubmitting}>
-                {isSubmitting ? (
+              <Button type="submit" className="w-full" disabled={isSubmitting || isUploadingImages}>
+                {isSubmitting || isUploadingImages ? (
                   <>
                     <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                    Creating Listing...
+                    {isUploadingImages ? "Creating and Uploading…" : "Creating Listing…"}
                   </>
                 ) : (
                   "Create Listing"
                 )}
               </Button>
+
+              {isUploadingImages && (
+                <div className="mt-4 flex justify-center items-center">
+                  <Loader2 className="h-5 w-5 animate-spin text-gray-600" />
+                  <span className="ml-2 text-gray-600">Uploading images...</span>
+                </div>
+              )}
+
               <p className="text-xs text-muted-foreground text-center mt-4">
                 By submitting this form, you agree to our{" "}
                 <Link href="/terms" className="underline underline-offset-2">
@@ -288,6 +417,7 @@ export default function CreateListingPage() {
                 </Link>.
               </p>
             </div>
+            {/* ────────────────────────────────────────────────────────────────── */}
           </form>
         </div>
       </div>
