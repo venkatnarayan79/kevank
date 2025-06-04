@@ -1,3 +1,5 @@
+// app/(pages)/create-listing/page.tsx
+
 "use client";
 
 import { useState } from "react";
@@ -6,7 +8,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { Loader2, CheckCircle } from "lucide-react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import Image from "next/image";
 import imageCompression from "browser-image-compression";
 
 import { Button } from "@/components/ui/button";
@@ -57,8 +59,7 @@ function ListingSuccess() {
           </div>
           <h2 className="text-2xl font-bold mb-2">Listing Created!</h2>
           <p className="text-muted-foreground mb-6">
-            Your listing has been successfully created and will be reviewed by
-            our team shortly.
+            Your listing has been successfully created and will be reviewed by our team shortly.
           </p>
           <Button asChild>
             <Link href="/">Return to Home</Link>
@@ -76,7 +77,6 @@ export default function CreateListingPage() {
   const [previewURLs, setPreviewURLs] = useState<string[]>([]);
   const [uploadErrors, setUploadErrors] = useState<string[]>([]);
   const [isUploadingImages, setIsUploadingImages] = useState(false);
-  const router = useRouter();
 
   const {
     register,
@@ -178,16 +178,17 @@ export default function CreateListingPage() {
 
         const uploadJson = await uploadRes.json();
         if (!uploadRes.ok) {
-          throw new Error(uploadJson.error || "Image upload failed");
+          throw new Error(uploadJson.error ?? "Image upload failed");
         }
 
         setIsUploadingImages(false);
       }
 
       setIsSubmitted(true);
-    } catch (error: any) {
-      console.error("Error in onSubmit:", error);
-      setUploadErrors([error.message || "Submission error"]);
+    } catch (error: unknown) {
+      const message = error instanceof Error ? error.message : String(error);
+      console.error("Error in onSubmit:", message);
+      setUploadErrors([message]);
       setIsUploadingImages(false);
     }
   }
@@ -372,7 +373,7 @@ export default function CreateListingPage() {
               <div className="mt-4 flex flex-wrap gap-2">
                 {previewURLs.map((url, idx) => (
                   <div key={idx} className="relative h-24 w-24 border rounded overflow-hidden">
-                    <img src={url} alt={`Preview ${idx + 1}`} className="h-full w-full object-cover" />
+                    <Image src={url} alt={`Preview ${idx + 1}`} fill className="object-cover" />
                     <button
                       type="button"
                       onClick={() => removeImageAtIndex(idx)}

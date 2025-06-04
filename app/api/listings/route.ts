@@ -8,10 +8,7 @@ const prisma = new PrismaClient();
 
 export async function POST(req: NextRequest) {
   try {
-    // The frontend sends exactly these fields (CreateListingData), without images
     const data = await req.json();
-
-    // Create a new Listing (images[] will be empty initially)
     const listing = await prisma.listing.create({
       data: {
         name: data.name,
@@ -22,13 +19,11 @@ export async function POST(req: NextRequest) {
         zipCode: data.zipCode,
         startDate: data.startDate,
         endDate: data.endDate,
-        // images: [] will be added later via the other route
       },
     });
-
     return NextResponse.json(listing, { status: 200 });
   } catch (error) {
-    console.error("Error creating listing:", error);
+    console.error("Error saving listing:", error);
     return NextResponse.json({ error: "Failed to save listing" }, { status: 500 });
   } finally {
     await prisma.$disconnect();
