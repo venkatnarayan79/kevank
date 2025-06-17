@@ -10,7 +10,7 @@ if (!resendApiKey) {
 
 
 
-const resend = new Resend(resendApiKey);
+const resend = new Resend(resendApiKey); 
 
 type ContactFormData = {
   name: string
