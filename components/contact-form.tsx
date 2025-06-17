@@ -41,11 +41,19 @@ export function ContactForm() {
     },
   })
 
-  const onSubmit = async (data: ContactFormData) => {
+const onSubmit = async (data: ContactFormData) => {
     try {
-      const result = await sendContactEmail(data)
+      const response = await fetch('/api/contact', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data),
+      })
 
-      if (result.success) {
+      const result = await response.json()
+
+      if (response.ok && result.success) {
         setFormStatus("success")
         reset() // Clear the form
       } else {
