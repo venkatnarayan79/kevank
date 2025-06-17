@@ -2,16 +2,6 @@
 
 import { Resend } from "resend"
 
-const resendApiKey = process.env.RESEND_API_KEY;
-
-if (!resendApiKey) {
-  throw new Error("RESEND_API_KEY is not defined in the environment variables.");
-} 
-
-
-
-const resend = new Resend(resendApiKey); 
-
 type ContactFormData = {
   name: string
   email: string
@@ -21,6 +11,14 @@ type ContactFormData = {
 
 export async function sendContactEmail(data: ContactFormData) {
   try {
+    const resendApiKey = process.env.RESEND_API_KEY;
+
+    if (!resendApiKey) {
+      throw new Error("RESEND_API_KEY is not defined in the environment variables.");
+    }
+
+    const resend = new Resend(resendApiKey);
+
     // Validate data
     if (!data.name || !data.email || !data.subject || !data.message) {
       return {
